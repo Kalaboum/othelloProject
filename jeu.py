@@ -89,15 +89,17 @@ def jouer(i,j,joueur):
             if nb_return >0:
                 retourner_pions(t,i,j, dir,nb_return,joueur)
         t[i][j]=joueur
-        print(joueur_actif)
-        joueur_actif=-joueur_actif
-        print(joueur_actif)
+        print(joueur)
+        joueur=-joueur
+        print(joueur)
         copier_tableau(t,Matrice)
-        return 0
+        return joueur
     return None
 
 
-
+def test():
+    global joueur_actif
+    joueur_actif=-joueur_actif
 
 
                 

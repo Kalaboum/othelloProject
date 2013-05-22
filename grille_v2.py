@@ -5,8 +5,6 @@ from tkinter import *
 from jeu import *
 afficher_plateau(Matrice)
 
-global joueur_actif
-
 fen = Tk()
 Position= Label(fen)
 #Score= Label(fen,text=" Score : 0, Joueur : Blanc")
@@ -56,13 +54,15 @@ def creation_grille(param):
         param+=TAILLE_CASE
 
 def jouer_coup(t,i,j):
-    global Matrice
+    global Matrice, joueur_actif
     joueur=joueur_actif
     print("joueur = " +str(joueur))
     test=jouer(i,j, joueur)
     print(joueur_actif)
     if  test.__class__.__name__ == "NoneType":
         return 
+    joueur_actif=-joueur
+    print(-joueur)
     afficher_plateau(Matrice)
     actualiser()    
     
