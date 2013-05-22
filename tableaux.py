@@ -21,21 +21,13 @@ def afficher_tableau(t):
 
 def nb_occurences_tableau(t,val):
     cpt = 0
-    h = len(m)
-    l = len(m[0])
+    h = len(t)
+    l = len(t[0])
     for j in range(l):
         for i in range(h):
-            if m[i][j] == cpt:
+            if t[j][i] == cpt:
                 cpt += 1
     return cpt
-
-        
-        
-def creer_pion(x,y,couleur):
-    x=(event.x//TAILLE_CASE)*TAILLE_CASE
-    y=(event.y//TAILLE_CASE)*TAILLE_CASE
-    grille.create_oval(x,y,x+2*r,y+2*r,fill='couleur')
-
 
 
 
