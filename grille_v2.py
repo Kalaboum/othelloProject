@@ -3,10 +3,13 @@
 
 from tkinter import *
 from jeu import *
-afficher_plateau(Matrice,N)
+afficher_plateau(Matrice)
+
+global joueur_actif
 
 fen = Tk()
-info= Label(fen)
+Position= Label(fen)
+#Score= Label(fen,text=" Score : 0, Joueur : Blanc")
 
 #Variables globales + Matrice du tableau:
 
@@ -15,7 +18,7 @@ r=25 # Rayon des pions
 DELTA=3 # Marge pions cases pour aspect visuel
 DB = 60 # Décalage lié a la bordure style "bois"
 
-#Foncions de l'interface graphique + manipulation naïve de la matrice:
+#Fonctions de l'interface graphique
 
 def actualiser():
     for i in range(N):
@@ -24,7 +27,11 @@ def actualiser():
                 creer_pion(i,j,"white","black")
             elif Matrice[i][j]==1:
                 creer_pion(i,j,"black","white")
-        
+    # if joueur_actif==-1:
+    #     fond.itemconfigure(Score,text=" Score : " + str(score(Matrice))+ ", Joueur : Blanc")
+    # else :
+    #     fond.itemconfigure(Score,text=" Score : " + str(score(Matrice))+ ", Joueur : Noir")
+    
 def clique_gauche(event):
     j=(event.x - DB )//TAILLE_CASE
     i=(event.y - DB )//TAILLE_CASE
@@ -37,7 +44,7 @@ def creer_pion(i,j,couleur,outline):
 def mouvement(event):
     x=event.x
     y=event.y
-    info.configure(text="X : "+ str((x - DB)//TAILLE_CASE) + " - Y : " + str((y -DB)//TAILLE_CASE),font='arialblack')
+    Position.configure(text="X : "+ str((x - DB)//TAILLE_CASE) + " - Y : " + str((y -DB)//TAILLE_CASE),font='ChintzyCPUBRK')
 
 def creation_grille(param):
     while param <= DB +(N*TAILLE_CASE):
@@ -50,11 +57,15 @@ def creation_grille(param):
 
 def jouer_coup(t,i,j):
     global Matrice
-    test=jouer(i,j)
+    joueur=joueur_actif
+    print("joueur = " +str(joueur))
+    test=jouer(i,j, joueur)
+    print(joueur_actif)
     if  test.__class__.__name__ == "NoneType":
         return 
-    afficher_plateau(Matrice,N)
-    actualiser()
+    afficher_plateau(Matrice)
+    actualiser()    
+    
 
 #Mes Canvas + Fonction d'initialisation
 
@@ -69,7 +80,7 @@ def renitialiser():
 photo=PhotoImage(file="grille.gif") # Ouverture de l'image
 largeur=photo.width() # Détermination de la largeur de l'image
 hauteur=photo.height() # Détermination de la hauteur de l'image
-fen.geometry(str(largeur+2)+"x"+str(hauteur+2)) # Redimensionnement de la fenêtre à partir de la taille de l'image
+#fen.geometry(str(largeur+2)+"x"+str(hauteur+2))  Redimensionnement de la fenêtre à partir de la taille de l'image
 fen.title("Othello Project - HOFER - DELMAS") # Titre de la fenêtre
 fond=Canvas(fen,bg="white",width=largeur,height=hauteur) # définition du canvas qui va accueillir l'image
 fond.pack() # placement du canvas
@@ -78,17 +89,17 @@ renitialiser()
 creation_grille(DB)
 
 #Mes Boutons:
-bouton_quitter=Button(fen,text='Quitter',command=fen.destroy, font='ChintzyCPUBRK')
-bouton_quitter.pack(side=LEFT)
+bouton_quitter=Button(fen,text='Quitter',command=fen.destroy, font='ChintzyCPUBRK',height=3)
+bouton_quitter.pack(side=RIGHT)
 
-bouton_renitialiser= Button(fen, text='Reinitialiser', command=renitialiser, font="ChintzyCPUBRK")
+bouton_renitialiser= Button(fen, text='Reinitialiser', command=renitialiser, font="ChintzyCPUBRK",height=3)
 bouton_renitialiser.pack(side=LEFT)
-creation_grille(DB)
 
 #Mes Callbacks :
 fond.bind("<Button-1>",clique_gauche )
 fond.bind("<Motion>", mouvement)
 
-info.pack()
+Position.pack()
+#Score.pack()
 fond.pack()
 fen.mainloop()

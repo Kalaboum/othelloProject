@@ -1,46 +1,49 @@
 from tableaux import *
+import sys
+
 # Ps : sens trigo dans ordre croissant
 N=8
 di=[0,-1,-1,-1,0,1,1,1]
 dj=[1,1,0,-1,-1,-1,0,1]
-joueur=-1 # Joueur blanc: -1 | Joueur noir: 1
+joueur_actif=1 # Joueur blanc: -1 | Joueur noir: 1
 Matrice=creer_tableau(N,N,0)
 
 def initialiser_Matrice():
-    global joueur
-    joueur=-1 
+    global joueur_actif
+    joueur_actif=1  
     Matrice[N//2][N//2]=-1
     Matrice[N//2 -1][N//2 -1]=-1
     Matrice[N//2 -1][N//2]=1
     Matrice[N//2][N//2 -1]=1
     
-def afficher_ligne(n):
-    while n>0:
-        print(' - ',end='')
-        n-=1
-    print('')
+def afficher_ligne():
+    for i in range(N):
+        sys.stdout.write("---")
 
-def afficher_plateau(t,N):
-    Cpt=1
-    for i in range(len(t)):
-        print(Cpt,end='')
-        for j in range( len(t[i])):
+def afficher_plateau(t):
+    afficher_ligne()
+    print(" ")
+    for i in range(N):
+        for j in range(N):
             if t[i][j] == 0:
-                print('| ',end='')
-            else :
-                print('|' + str(t[i][j]),end='')
-        print('|',end='')
-        Cpt+=1
+                sys.stdout.write("  ")
+            elif t[i][j] == -1:
+                sys.stdout.write("-1")
+            else:
+                sys.stdout.write(" 1")
+            sys.stdout.write('|')
+        print("")
+        afficher_ligne()
         print('')
-        
-        afficher_ligne(N)
 
-def score(t,N):
-    if joueur == -1:
-        return nb_occurences_tableau(t,-1)
-    return nb_occurences_tableau(t,1)
+def score(t): #score négatif : le joueur blanc a -score pion en plus que le joueur noir, score positif : le joueur noir a score pion en plus que le joueur blanc
+    score = 0
+    for i in t:
+        for j in i:
+            score += j
+    return score
 
-def tester_position(t,i,j,dir):
+def tester_position(t,i,j,dir,joueur):
     if t[i][j] == 0:
         i+=di[dir]
         j+=dj[dir]
@@ -54,10 +57,10 @@ def tester_position(t,i,j,dir):
         return c
     return 0
 
-def position_valide(t,i,j):
+def position_valide(t,i,j,joueur):
     dir=0
     while dir<=7: # Test dans toutes les directions
-        if tester_position(t,i,j,dir)>0:
+        if tester_position(t,i,j,dir,joueur)>0:
             return True
         dir+=1
     return False
@@ -69,24 +72,26 @@ def peut_jouer(t,joueur):
                 return True
     return False
 
-def retourner_pions(t,i,j,dir,n):
+def retourner_pions(t,i,j,dir,n,joueur):
     while n>0:
         i+=di[dir]
         j+=dj[dir]
         t[i][j]=joueur
         n-=1
         
-def jouer(i,j): 
-    global joueur,Matrice
+def jouer(i,j,joueur): 
+    global joueur_actif ,Matrice
     t= creer_tableau(N,N,0)
     copier_tableau(Matrice,t)
-    if position_valide(t,i,j):
+    if position_valide(t,i,j,joueur):
         for dir in range(8):
-            nb_return= tester_position(t,i,j,dir)
+            nb_return= tester_position(t,i,j,dir,joueur)
             if nb_return >0:
-                retourner_pions(t,i,j, dir,nb_return)
+                retourner_pions(t,i,j, dir,nb_return,joueur)
         t[i][j]=joueur
-        joueur=-joueur
+        print(joueur_actif)
+        joueur_actif=-joueur_actif
+        print(joueur_actif)
         copier_tableau(t,Matrice)
         return 0
     return None
