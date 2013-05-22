@@ -6,13 +6,9 @@ def creer_tableau(h, l, val):
 
 
 def copier_tableau(t1,t2):
-    if t1[0].__class__.__name__ == int: 
-        for i in range(0,len(t1)):
-            t2[i]=t1[i]
-    else:
-        for i in range(0,len(t1)):
-            for j in range(0,len(t1[i])):
-                t2[i][j]=t1[i][j]
+    for i in range(0,len(t1)):
+        for j in range(0,len(t1[i])):
+            t2[i][j]=t1[i][j]
                            
 def initialiser_tableau(t,val):
     for i in range(len(t)):
