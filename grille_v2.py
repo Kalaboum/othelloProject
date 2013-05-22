@@ -3,7 +3,7 @@
 
 from tkinter import *
 from jeu import *
-afficher_plateau(Matrice,N)
+afficher_plateau(Matrice)
 
 fen = Tk()
 info= Label(fen)
@@ -79,7 +79,7 @@ def jouer_coup(t,i,j):
     test=jouer(i,j)
     if  test.__class__.__name__ == "NoneType":
         return 
-    afficher_plateau(Matrice,N)
+    afficher_plateau(Matrice)
     actualiser()
 
 #Conditions de départ du jeu

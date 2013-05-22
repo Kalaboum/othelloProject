@@ -1,4 +1,5 @@
 from tableaux import *
+import sys
 # Ps : sens trigo dans ordre croissant
 N=8
 di=[0,-1,-1,-1,0,1,1,1]
@@ -12,31 +13,33 @@ def initialiser():
     Matrice[N//2 -1][N//2]=1
     Matrice[N//2][N//2 -1]=1
     
-def afficher_ligne(n):
-    while n>0:
-        print(' - ',end='')
-        n-=1
-    print('')
+def afficher_ligne():
+    for i in range(N):
+        sys.stdout.write("---")
 
-def afficher_plateau(t,N):
-    Cpt=1
-    for i in range(len(t)):
-        print(Cpt,end='')
-        for j in range( len(t[i])):
+def afficher_plateau(t):
+    afficher_ligne()
+    print(" ")
+    for i in range(N):
+        for j in range(N):
             if t[i][j] == 0:
-                print('| ',end='')
-            else :
-                print('|' + str(t[i][j]),end='')
-        print('|',end='')
-        Cpt+=1
+                sys.stdout.write("  ")
+            elif t[i][j] == -1:
+                sys.stdout.write("-1")
+            else:
+                sys.stdout.write(" 1")
+            sys.stdout.write('|')
+        print("")
+        afficher_ligne()
         print('')
         
-        afficher_ligne(N)
 
-def score(t,N):
-    if joueur == -1:
-        return nb_occurences_tableau(t,-1)
-    return nb_occurences_tableau(t,1)
+def score(t):
+    score = 0
+    for i in t:
+        for j in i:
+            score += j
+    return score
 
 def tester_position(t,i,j,dir):
     if t[i][j] == 0:
