@@ -66,7 +66,7 @@ def position_valide(t,i,j):
 def peut_jouer(t,joueur):
     for i in range(N):
         for j in range(N):
-            if position_valide(t,i,j,joueur):
+           if position_valide(t,i,j,joueur):
                 return True
     return False
 
