@@ -6,7 +6,9 @@ dj=[1,1,0,-1,-1,-1,0,1]
 joueur=-1 # Joueur blanc: -1 | Joueur noir: 1
 Matrice=creer_tableau(N,N,0)
 
-def initialiser(): 
+def initialiser_Matrice():
+    global joueur
+    joueur=-1 
     Matrice[N//2][N//2]=-1
     Matrice[N//2 -1][N//2 -1]=-1
     Matrice[N//2 -1][N//2]=1
@@ -89,7 +91,6 @@ def jouer(i,j):
         return 0
     return None
 
-initialiser() # A remove des que le bouton renit est fait
 
 
 
