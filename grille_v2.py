@@ -4,7 +4,6 @@
 from tkinter import *
 from jeu import *
 afficher_plateau(Matrice)
-
 fen = Tk()
 Position= Label(fen)
 #Score= Label(fen,text=" Score : 0, Joueur : Blanc")
@@ -17,7 +16,9 @@ DELTA=3 # Marge pions cases pour aspect visuel
 DB = 60 # Décalage lié a la bordure style "bois"
 
 #Fonctions de l'interface graphique
-
+def lancer_le_jeu():
+    global fen
+    fen.mainloop()
 def actualiser():
     for i in range(N):
         for j in range(N):
@@ -33,7 +34,8 @@ def actualiser():
 def clique_gauche(event):
     j=(event.x - DB )//TAILLE_CASE
     i=(event.y - DB )//TAILLE_CASE
-    if 0<=i<=7 and 0<=j<=7:
+    if 0<=i<=7 and 0<=j<=7 and Humain_peut_jouer:
+        set_Humain_peut_jouer(False)
         jouer_coup(Matrice,i,j)
     
 def creer_pion(i,j,couleur,outline):
@@ -53,19 +55,21 @@ def creation_grille(param):
         fond.create_line(DB,param,(N*TAILLE_CASE)+DB,param,fill='white',width=DELTA)
         param+=TAILLE_CASE
 
+#Revoir la fonction: global Matrice pas forcément utile
 def jouer_coup(t,i,j):
-    global Matrice, joueur_actif
-    joueur=joueur_actif
-    print("joueur = " +str(joueur))
+    global Matrice
+    joueur= get_joueur_actif()
+    print("Le joueur est" + str(joueur)) 
+    print("joueur_actif avant jouer" + str(joueur_actif))
     test=jouer(i,j, joueur)
-    print(joueur_actif)
-    if  test.__class__.__name__ == "NoneType":
+    # Ainsi un coup invalide ne change pas le joueur actif 
+    if  test == None:
         return 
-    joueur_actif=-joueur
-    print(-joueur)
     afficher_plateau(Matrice)
+    attendre_tour_humain(t, joueur)
     actualiser()    
     
+
 
 #Mes Canvas + Fonction d'initialisation
 
@@ -102,4 +106,3 @@ fond.bind("<Motion>", mouvement)
 Position.pack()
 #Score.pack()
 fond.pack()
-fen.mainloop()
