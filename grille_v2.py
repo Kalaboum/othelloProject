@@ -4,7 +4,6 @@
 from tkinter import *
 from jeu import *
 afficher_plateau(Matrice)
-
 fen = Tk()
 Position= Label(fen)
 Score= Label(fen,text=" Blanc : 2 | Noir : 2 , Joueur : Noir",relief="groove",font='ChintzyCPUBRK',height=2)
@@ -17,7 +16,10 @@ DELTA=3 # Marge pions cases pour aspect visuel
 DB = 60 # Décalage lié a la bordure style "bois"
 
 #Fonctions de l'interface graphique
-
+def lancer_le_jeu():
+    global fen
+    fen.mainloop()
+    
 def actualiser():
     for i in range(N):
         for j in range(N):
@@ -26,19 +28,24 @@ def actualiser():
             elif Matrice[i][j]==1:
                 creer_pion(i,j,"black","#3C3C3C")
     score_actuel=score(Matrice)
-    if joueur_actif==-1:
-         Score.config(text=" Blanc : " + str(score_actuel[0])+" | Noir : " + str(score_actuel[1]) + " , Joueur : Blanc")
+    if get_joueur_actif()==-1:
+         Score.config(text=" Blanc : " + str(score_actuel[0])+" | Noir : "
+                      + str(score_actuel[1]) + " , Joueur : Blanc")
     else :
-         Score.config(text=" Blanc : " + str(score_actuel[0])+" | Noir : " + str(score_actuel[1]) + " , Joueur : Noir")
+         Score.config(text=" Blanc : " + str(score_actuel[0])+" | Noir : "
+                      + str(score_actuel[1]) + " , Joueur : Noir")
     
 def clique_gauche(event):
     j=(event.x - DB )//TAILLE_CASE
     i=(event.y - DB )//TAILLE_CASE
-    if 0<=i<=7 and 0<=j<=7:
+    if 0<=i<=7 and 0<=j<=7 and Humain_peut_jouer:
+        set_Humain_peut_jouer(False)
         jouer_coup(Matrice,i,j)
     
 def creer_pion(i,j,couleur,outline):
-    fond.create_oval((j*TAILLE_CASE+DELTA)+ DB,(i*TAILLE_CASE+DELTA)+ DB,((j+1)*TAILLE_CASE -1 - DELTA)+ DB,((i+1)*TAILLE_CASE -1 -DELTA)+ DB,fill=couleur,outline=outline,width=DELTA-1)
+    fond.create_oval((j*TAILLE_CASE+DELTA)+ DB,(i*TAILLE_CASE+DELTA)+ DB,
+                     ((j+1)*TAILLE_CASE -1 - DELTA)+ DB,((i+1)*TAILLE_CASE -1 -DELTA)+ DB,
+                     fill=couleur,outline=outline,width=DELTA-1)
 
 def mouvement(event):
     j=(event.x - DB )//TAILLE_CASE
@@ -57,16 +64,21 @@ def creation_grille(param):
         fond.create_line(DB,param,(N*TAILLE_CASE)+DB,param,fill='white',width=DELTA)
         param+=TAILLE_CASE
 
+#Revoir la fonction: global Matrice pas forcément utile
 def jouer_coup(t,i,j):
-    global Matrice, joueur_actif
-    joueur=joueur_actif
+    global Matrice
+    joueur= get_joueur_actif()
+    print("Le joueur est" + str(joueur)) 
+    print("joueur_actif avant jouer" + str(joueur_actif))
     test=jouer(i,j, joueur)
-    if  test.__class__.__name__ == "NoneType":
+    # Ainsi un coup invalide ne change pas le joueur actif 
+    if  test == None:
         return 
-    joueur_actif=-joueur
     afficher_plateau(Matrice)
+    attendre_tour_humain(t, joueur)
     actualiser()    
     
+
 
 #Mes Canvas + Fonction d'initialisation
 
@@ -83,11 +95,12 @@ def renitialiser():
 photo=PhotoImage(file="grille.gif") # Ouverture de l'image
 largeur=photo.width() # Détermination de la largeur de l'image
 hauteur=photo.height() # Détermination de la hauteur de l'image
-#fen.geometry(str(largeur+2)+"x"+str(hauteur+2))  Redimensionnement de la fenêtre à partir de la taille de l'image
 fen.title("Othello Project - HOFER - DELMAS") # Titre de la fenêtre
-fond=Canvas(fen,bg="white",width=largeur,height=hauteur) # définition du canvas qui va accueillir l'image
+fond=Canvas(fen,bg="white",width=largeur,height=hauteur) # définition du canvas qui va 
+                                                         #accueillir l'image
 fond.pack() # placement du canvas
-img=fond.create_image(largeur/2,hauteur/2,image=photo) # Positionnement de l'image à partir de son centre
+img=fond.create_image(largeur/2,hauteur/2,image=photo) # Positionnement de l'image à 
+                                                       #partir de son centre
 renitialiser()
 
 #Mes Boutons:
@@ -104,4 +117,3 @@ fond.bind("<Motion>", mouvement)
 Position.pack()
 Score.pack()
 fond.pack()
-fen.mainloop()
