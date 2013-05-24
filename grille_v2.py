@@ -7,7 +7,7 @@ afficher_plateau(Matrice)
 
 fen = Tk()
 Position= Label(fen)
-#Score= Label(fen,text=" Score : 0, Joueur : Blanc")
+Score= Label(fen,text=" Blanc : 2 | Noir : 2 , Joueur : Noir",relief="groove",font='ChintzyCPUBRK',height=2)
 
 #Variables globales + Matrice du tableau:
 
@@ -22,13 +22,14 @@ def actualiser():
     for i in range(N):
         for j in range(N):
             if Matrice[i][j]==-1:
-                creer_pion(i,j,"white","black")
+                creer_pion(i,j,"white","#3C3C3C")
             elif Matrice[i][j]==1:
-                creer_pion(i,j,"black","white")
-    # if joueur_actif==-1:
-    #     fond.itemconfigure(Score,text=" Score : " + str(score(Matrice))+ ", Joueur : Blanc")
-    # else :
-    #     fond.itemconfigure(Score,text=" Score : " + str(score(Matrice))+ ", Joueur : Noir")
+                creer_pion(i,j,"black","#3C3C3C")
+    score_actuel=score(Matrice)
+    if joueur_actif==-1:
+         Score.config(text=" Blanc : " + str(score_actuel[0])+" | Noir : " + str(score_actuel[1]) + " , Joueur : Blanc")
+    else :
+         Score.config(text=" Blanc : " + str(score_actuel[0])+" | Noir : " + str(score_actuel[1]) + " , Joueur : Noir")
     
 def clique_gauche(event):
     j=(event.x - DB )//TAILLE_CASE
@@ -40,9 +41,12 @@ def creer_pion(i,j,couleur,outline):
     fond.create_oval((j*TAILLE_CASE+DELTA)+ DB,(i*TAILLE_CASE+DELTA)+ DB,((j+1)*TAILLE_CASE -1 - DELTA)+ DB,((i+1)*TAILLE_CASE -1 -DELTA)+ DB,fill=couleur,outline=outline,width=DELTA-1)
 
 def mouvement(event):
-    x=event.x
-    y=event.y
-    Position.configure(text="X : "+ str((x - DB)//TAILLE_CASE) + " - Y : " + str((y -DB)//TAILLE_CASE),font='ChintzyCPUBRK')
+    j=(event.x - DB )//TAILLE_CASE
+    i=(event.y - DB )//TAILLE_CASE
+    if 0<=i<=7 and 0<=j<=7:
+        Position.configure(text="X : "+ str(j) + " - Y : " + str(i),font='ChintzyCPUBRK')
+    else:
+        Position.configure(text="Vous etes hors zone de jeu.")
 
 def creation_grille(param):
     while param <= DB +(N*TAILLE_CASE):
@@ -56,13 +60,10 @@ def creation_grille(param):
 def jouer_coup(t,i,j):
     global Matrice, joueur_actif
     joueur=joueur_actif
-    print("joueur = " +str(joueur))
     test=jouer(i,j, joueur)
-    print(joueur_actif)
     if  test.__class__.__name__ == "NoneType":
         return 
     joueur_actif=-joueur
-    print(-joueur)
     afficher_plateau(Matrice)
     actualiser()    
     
@@ -70,7 +71,9 @@ def jouer_coup(t,i,j):
 #Mes Canvas + Fonction d'initialisation
 
 def renitialiser():
-    global Matrice
+    global Matrice ,joueur_actif
+    joueur=1
+    joueur_actif=joueur
     img=fond.create_image(largeur/2,hauteur/2,image=photo)
     creation_grille(DB)
     initialiser_tableau(Matrice,0)
@@ -86,7 +89,6 @@ fond=Canvas(fen,bg="white",width=largeur,height=hauteur) # définition du canvas
 fond.pack() # placement du canvas
 img=fond.create_image(largeur/2,hauteur/2,image=photo) # Positionnement de l'image à partir de son centre
 renitialiser()
-creation_grille(DB)
 
 #Mes Boutons:
 bouton_quitter=Button(fen,text='Quitter',command=fen.destroy, font='ChintzyCPUBRK',height=3)
@@ -100,6 +102,6 @@ fond.bind("<Button-1>",clique_gauche )
 fond.bind("<Motion>", mouvement)
 
 Position.pack()
-#Score.pack()
+Score.pack()
 fond.pack()
 fen.mainloop()

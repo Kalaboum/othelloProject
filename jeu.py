@@ -2,15 +2,18 @@ from tableaux import *
 import sys
 
 # Ps : sens trigo dans ordre croissant
-N=8
-di=[0,-1,-1,-1,0,1,1,1]
+N=8 #Cote du tableau
+di=[0,-1,-1,-1,0,1,1,1] #Permet decalage en i
 dj=[1,1,0,-1,-1,-1,0,1]
 joueur_actif=1 # Joueur blanc: -1 | Joueur noir: 1
 Matrice=creer_tableau(N,N,0)
 
-def initialiser_Matrice():
+def set_joueur_actif(n):
     global joueur_actif
-    joueur_actif=1  
+    joueur_actif=n 
+
+def initialiser_Matrice():
+    set_joueur_actif(1)
     Matrice[N//2][N//2]=-1
     Matrice[N//2 -1][N//2 -1]=-1
     Matrice[N//2 -1][N//2]=1
@@ -36,12 +39,11 @@ def afficher_plateau(t):
         afficher_ligne()
         print('')
 
-def score(t): #score négatif : le joueur blanc a -score pion en plus que le joueur noir, score positif : le joueur noir a score pion en plus que le joueur blanc
-    score = 0
-    for i in t:
-        for j in i:
-            score += j
-    return score
+
+def score(t):
+    score_blanc = nb_occurences_tableau(Matrice,-1)
+    score_noir = nb_occurences_tableau(Matrice,1)
+    return (score_blanc,score_noir)
 
 def tester_position(t,i,j,dir,joueur):
     if t[i][j] == 0:
@@ -68,7 +70,7 @@ def position_valide(t,i,j,joueur):
 def peut_jouer(t,joueur):
     for i in range(N):
         for j in range(N):
-            if position_valide(t,i,j,joueur):
+           if position_valide(t,i,j,joueur):
                 return True
     return False
 
