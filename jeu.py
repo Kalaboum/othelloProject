@@ -58,6 +58,13 @@ def afficher_plateau(t):
         afficher_ligne()
         print('')
 
+def score_absolu(t, joueur):
+    count = 0
+    for i in t:
+        for j in i:
+            if j == joueur:
+                count += 1
+    return count
 
 def score(t): #score négatif : le joueur blanc a -score pion en plus que le
 # joueur noir, score positif : le joueur noir a score pion en plus que
