@@ -1,12 +1,12 @@
 from tableaux import *
 import sys
 
-
-# TODO: Pouvoir initialiser les variables par l'interface graphique# Ps : sens trigo dans ordre croissant
-N=8
-di=[0,-1,-1,-1,0,1,1,1]
+# TO DO: Pouvoir initialiser les variables par l'interface graphique
+# Ps : sens trigo dans ordre croissant
+N=8 #Cote du tableau
+di=[0,-1,-1,-1,0,1,1,1] 
 dj=[1,1,0,-1,-1,-1,0,1]
-joueur_actif = -1# Joueur blanc: -1 | Joueur noir: 1
+joueur_actif = 1# Joueur blanc: -1 | Joueur noir: 1
 Matrice=creer_tableau(N,N,0)
 Humain_peut_jouer = True
 type_joueur = ["Humain",None,"Humain"] #Bricolage, voir comment faire
@@ -32,7 +32,7 @@ def set_joueur_actif(n):
     joueur_actif = n
 
 def initialiser_Matrice():
-    set_joueur_actif(-1)  
+    set_joueur_actif(1)  
     Matrice[N//2][N//2]=-1
     Matrice[N//2 -1][N//2 -1]=-1
     Matrice[N//2 -1][N//2]=1
@@ -66,14 +66,10 @@ def score_absolu(t, joueur):
                 count += 1
     return count
 
-def score(t): #score négatif : le joueur blanc a -score pion en plus que le
-# joueur noir, score positif : le joueur noir a score pion en plus que
-# le joueur blanc
-    score = 0
-    for i in t:
-        for j in i:
-            score += j
-    return score
+def score(t):
+    score_blanc = nb_occurences_tableau(Matrice,-1)
+    score_noir = nb_occurences_tableau(Matrice,1)
+    return (score_blanc,score_noir)
 
 def tester_position(t,i,j,dir,joueur):
     if t[i][j] == 0:

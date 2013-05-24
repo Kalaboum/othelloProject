@@ -4,7 +4,6 @@ def creer_tableau(h, l, val):
         t[i] = [val]*l
     return t
 
-
 def copier_tableau(t1,t2):
     for i in range(0,len(t1)):
         for j in range(0,len(t1[i])):
@@ -21,11 +20,9 @@ def afficher_tableau(t):
 
 def nb_occurences_tableau(t,val):
     cpt = 0
-    h = len(t)
-    l = len(t[0])
-    for j in range(l):
-        for i in range(h):
-            if t[j][i] == cpt:
+    for j in range(len(t)):
+        for i in range(len(t[j])):
+            if t[j][i] == val:
                 cpt += 1
     return cpt
 
