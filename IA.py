@@ -17,3 +17,17 @@ def Aleatoire(t, joueur):
     print("Joueur de l'IA :" + str(joueur))
     jouer(listeCoupsPossibles[coup][0], listeCoupsPossibles[coup][1], joueur)
     afficher_tableau(Matrice)
+
+def Maximiser(t, joueur):
+    print(joueur)
+    plus_grand_nombre_retournes = 0
+    meilleur_coup = None
+    for i in range(N):
+        for j in range(N):
+            retournes = 0
+            for dir in range(8):
+                retournes += tester_position(t,i,j,dir,joueur)
+            if retournes > plus_grand_nombre_retournes:
+                plus_grand_nombre_retournes = retournes
+                meilleur_coup = (i,j)
+    jouer(meilleur_coup[0], meilleur_coup[1], joueur)

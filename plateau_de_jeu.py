@@ -9,7 +9,7 @@ dj=[1,1,0,-1,-1,-1,0,1]
 joueur_actif = 1# Joueur blanc: -1 | Joueur noir: 1
 Matrice=creer_tableau(N,N,0)
 Humain_peut_jouer = True
-type_joueur = ["IAAleatoire",None,"Humain"] #Bricolage, voir comment faire
+type_joueur = ["IAMaximiser",None,"Humain"] #Bricolage, voir comment faire
 # mieux
 
 def set_Humain_peut_jouer(boolean):
@@ -133,5 +133,3 @@ def trouver_prochain_joueur(t, joueur):
         if not peut_jouer(t, prochain_joueur):
             return None
     return prochain_joueur
-
-
