@@ -5,8 +5,8 @@ from random import randint
 def Aleatoire(t, joueur):
     listeCoupsPossibles = []
     print(listeCoupsPossibles)
-    for i in range(N):
-        for j in range(N):
+    for i in range(Dim):
+        for j in range(Dim):
             if position_valide(t,i,j,joueur):
                 listeCoupsPossibles.append((i,j))#ajoute les coordonnées d'un
 #coup valide dans un tuple
@@ -22,8 +22,8 @@ def Maximiser(t, joueur):
     print(joueur)
     plus_grand_nombre_retournes = 0
     meilleur_coup = None
-    for i in range(N):
-        for j in range(N):
+    for i in range(Dim):
+        for j in range(Dim):
             retournes = 0
             for dir in range(8):
                 retournes += tester_position(t,i,j,dir,joueur)

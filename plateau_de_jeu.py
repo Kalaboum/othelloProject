@@ -1,20 +1,43 @@
 from tableaux import *
 import sys
 
+####### IMPORTANT ########
+
+#J'ai changer en N en Dim, car c'étais une variable globale du module
+#tkinter.filedialog, j'ai galerer comme un connard pendant 30min
+#pour trouver que N='n' dans ce module xD
+
+#############################
+
 # TO DO: Pouvoir initialiser les variables par l'interface graphique
 # Ps : sens trigo dans ordre croissant
-N=8 #Cote du tableau
+Dim=8 #Cote du tableau, voila, changement ^^
 di=[0,-1,-1,-1,0,1,1,1] 
 dj=[1,1,0,-1,-1,-1,0,1]
 joueur_actif = 1# Joueur blanc: -1 | Joueur noir: 1
-Matrice=creer_tableau(N,N,0)
+Matrice=creer_tableau(Dim,Dim,0)
 Humain_peut_jouer = True
 type_joueur = ["IAMaximiser",None,"Humain"] #Bricolage, voir comment faire
 # mieux
+tableau_sauvegarde = [] #Tableau contenant toutes les matrices de jeu
+
+# Les accesseurs/mutateurs (c'pas ça l'encapsulation d'ailleurs ?)
 
 def set_Humain_peut_jouer(boolean):
     global Humain_peut_jouer
     Humain_peut_jouer = boolean
+
+def set_Dim(Taille):
+    global Dim
+    Dim = Taille
+
+def get_Dim():
+    global Dim
+    return Dim
+
+def get_Matrice():
+    global Matrice
+    return Matrice
 
 def get_typejoueur(n):
     return type_joueur[n+1]
@@ -31,22 +54,44 @@ def set_joueur_actif(n):
     global joueur_actif
     joueur_actif = n
 
+def set_Matrice(t):
+    global Matrice
+    Matrice = t
+
+def get_element_tableau_sauvegarde(indice):
+    global tableau_sauvegarde
+    return tableau_sauvegarde[indice]
+
+def get_tableau_sauvegarde():
+    global tableau_sauvegarde
+    return tableau_sauvegarde
+
+def set_tableau_sauvegarde(t):
+    global tableau_sauvegarde
+    tableau_sauvegarde = t
+
+def ajouter_tableau_sauvegarde(t):
+    global tableau_sauvegarde
+    tableau_sauvegarde.append(t)
+
+# les fontions
+
 def initialiser_Matrice():
     set_joueur_actif(1)  
-    Matrice[N//2][N//2]=-1
-    Matrice[N//2 -1][N//2 -1]=-1
-    Matrice[N//2 -1][N//2]=1
-    Matrice[N//2][N//2 -1]=1
+    Matrice[Dim//2][Dim//2]=-1
+    Matrice[Dim//2 -1][Dim//2 -1]=-1
+    Matrice[Dim//2 -1][Dim//2]=1
+    Matrice[Dim//2][Dim//2 -1]=1
     
 def afficher_ligne():
-    for i in range(N):
+    for i in range(Dim):
         sys.stdout.write("---")
 
 def afficher_plateau(t):
     afficher_ligne()
     print(" ")
-    for i in range(N):
-        for j in range(N):
+    for i in range(Dim):
+        for j in range(Dim):
             if t[i][j] == 0:
                 sys.stdout.write("  ")
             elif t[i][j] == -1:
@@ -58,7 +103,7 @@ def afficher_plateau(t):
         afficher_ligne()
         print('')
 
-def score_absolu(t, joueur):
+def score_absolu(t, joueur): # Utile pour le Negamax ;) (Je voyais plus pourquoi tu voulais tant cette fonction :p )
     count = 0
     for i in t:
         for j in i:
@@ -76,11 +121,11 @@ def tester_position(t,i,j,dir,joueur):
         i+=di[dir]
         j+=dj[dir]
         c=0
-        while 0<=i<N and 0<=j<N and t[i][j]==-joueur:
+        while 0<=i<Dim and 0<=j<Dim and t[i][j]==-joueur:
             c+=1
             i+=di[dir]
             j+=dj[dir]
-            if  i<0 or j<0 or j>=N or i>=N or t[i][j] == 0:
+            if  i<0 or j<0 or j>=Dim or i>=Dim or t[i][j] == 0:
                 return 0
         return c
     return 0
@@ -94,8 +139,8 @@ def position_valide(t,i,j,joueur):
     return False
 
 def peut_jouer(t,joueur):
-    for i in range(N):
-        for j in range(N):
+    for i in range(Dim):
+        for j in range(Dim):
            if position_valide(t,i,j,joueur):
                 return True
     return False
@@ -109,7 +154,7 @@ def retourner_pions(t,i,j,dir,n,joueur):
         
 def jouer(i,j,joueur): 
     global Matrice
-    t= creer_tableau(N,N,0)
+    t= creer_tableau(Dim,Dim,0)
     copier_tableau(Matrice,t)
     if position_valide(t,i,j,joueur):
         for dir in range(8):
