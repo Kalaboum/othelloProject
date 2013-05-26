@@ -1,21 +1,22 @@
 from plateau_de_jeu import *
 from random import randint
+import sys
 
+#Paramètres de l'IA Negamax
+depth = 0
+maxdepth = 3
+
+def set_maxdepth(n):
+    global maxdepth
+    maxdepth = n
 #Joue un coup aléatoire parmi ceux possibles
 def Aleatoire(t, joueur):
-    listeCoupsPossibles = []
-    print(listeCoupsPossibles)
-    for i in range(Dim):
-        for j in range(Dim):
-            if position_valide(t,i,j,joueur):
-                listeCoupsPossibles.append((i,j))#ajoute les coordonnées d'un
-#coup valide dans un tuple
-    print (listeCoupsPossibles)
-    coup = randint(0, len(listeCoupsPossibles) -1)
-    print("coup joué par IA :" + str(listeCoupsPossibles[coup][0]) 
+    l = liste_coups_possibles(t, joueur)
+    coup = randint(0, len(l) -1)
+    print("coup joué par IA :" + str(l[coup][0]) 
  + " " + str(listeCoupsPossibles[coup][0]))
     print("Joueur de l'IA :" + str(joueur))
-    jouer(listeCoupsPossibles[coup][0], listeCoupsPossibles[coup][1], joueur)
+    jouer(l[coup][0], l[coup][1], joueur)
     afficher_tableau(Matrice)
 
 def Maximiser(t, joueur):
@@ -31,3 +32,21 @@ def Maximiser(t, joueur):
                 plus_grand_nombre_retournes = retournes
                 meilleur_coup = (i,j)
     jouer(meilleur_coup[0], meilleur_coup[1], joueur)
+
+def Negamax(t, joueur, depth, maxdepth):
+    if depth == maxdepth:
+        return evaluer(t, joueur) #TODO créer une fonction evaluer
+    else:
+        meilleur_valeur = -sys.maxint
+        l = liste_coups_possibles(t,joueur)
+        for i in range(len(l)):
+            jouer(l[i][0], l[i][0], joueur)
+            valeur_courante = Negamax(Matrice, -joueur, depth + 1, maxdepth)
+            undo #TODO faire une fonction undo
+            valeur_courante = -valeur_courante
+            if meilleure_valeur < valeur_courante:
+                meilleur_valeur = valeur_courante
+                meilleur_coup = l[i]
+        if len(l) == 0:
+            Negamax(Matrice -joueur, depth + 1, maxdepth)
+    return meilleur_coup
