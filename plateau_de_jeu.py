@@ -56,7 +56,7 @@ def set_joueur_actif(n):
 
 def set_Matrice(t):
     global Matrice
-    Matrice = t
+    copier_tableau(t, Matrice)
 
 def get_element_tableau_sauvegarde(indice):
     global tableau_sauvegarde
@@ -68,7 +68,7 @@ def get_tableau_sauvegarde():
 
 def set_tableau_sauvegarde(t):
     global tableau_sauvegarde
-    tableau_sauvegarde = t
+    copier_tableau(t, tableau_sauvegarde)
 
 def ajouter_tableau_sauvegarde(t):
     global tableau_sauvegarde
