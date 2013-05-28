@@ -56,7 +56,7 @@ def set_joueur_actif(n):
 
 def set_Matrice(t):
     global Matrice
-    Matrice = t
+    copier_tableau(t, Matrice)
 
 def get_element_tableau_sauvegarde(indice):
     global tableau_sauvegarde
@@ -68,20 +68,39 @@ def get_tableau_sauvegarde():
 
 def set_tableau_sauvegarde(t):
     global tableau_sauvegarde
-    tableau_sauvegarde = t
+    tableau_sauvegarde = []
+    for i in range (len(t)):
+        ajouter_tableau_sauvegarde(t[i])
 
 def ajouter_tableau_sauvegarde(t):
     global tableau_sauvegarde
-    tableau_sauvegarde.append(t)
+    t_copie = creer_tableau(len(t),len(t),0)
+    copier_tableau(t, t_copie)
+    tableau_sauvegarde.append(t_copie)
 
+def supprimer_n_elements_sauvegarde(n):
+    global tableau_sauvegarde
+    for i in range(n):
+        tableau_sauvegarde.pop()
+        
 # les fontions
 
+def undo(n):
+    if len(tableau_sauvegarde)>= n:
+        supprimer_n_elements_sauvegarde(n)
+        set_Matrice(tableau_sauvegarde[-1])
+        if n%2==1:
+            set_joueur_actif(-get_joueur_actif())
+
 def initialiser_Matrice():
+    global Matrice
     set_joueur_actif(1)  
     Matrice[Dim//2][Dim//2]=-1
     Matrice[Dim//2 -1][Dim//2 -1]=-1
     Matrice[Dim//2 -1][Dim//2]=1
     Matrice[Dim//2][Dim//2 -1]=1
+    tableau_sauvegarde=[]
+    ajouter_tableau_sauvegarde(Matrice)
     
 def afficher_ligne():
     for i in range(Dim):
@@ -90,8 +109,8 @@ def afficher_ligne():
 def afficher_plateau(t):
     afficher_ligne()
     print(" ")
-    for i in range(Dim):
-        for j in range(Dim):
+    for i in range(get_Dim()):
+        for j in range(get_Dim()):
             if t[i][j] == 0:
                 sys.stdout.write("  ")
             elif t[i][j] == -1:
@@ -102,6 +121,8 @@ def afficher_plateau(t):
         print("")
         afficher_ligne()
         print('')
+
+    
 
 def score_absolu(t, joueur): # Utile pour le Negamax ;) (Je voyais plus pourquoi tu voulais tant cette fonction :p )
     count = 0
@@ -152,20 +173,15 @@ def retourner_pions(t,i,j,dir,n,joueur):
         t[i][j]=joueur
         n-=1
         
-def jouer(i,j,joueur): 
-    global Matrice
-    t= creer_tableau(Dim,Dim,0)
-    copier_tableau(Matrice,t)
+def jouer(i,j,joueur):
+    t= get_Matrice()
     if position_valide(t,i,j,joueur):
         for dir in range(8):
             nb_return= tester_position(t,i,j,dir,joueur)
             if nb_return >0:
                 retourner_pions(t,i,j, dir,nb_return,joueur)
         t[i][j]=joueur
-        print(joueur)
         joueur=-joueur
-        print(joueur)
-        copier_tableau(t,Matrice)
         return joueur
     return None
 

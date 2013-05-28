@@ -4,19 +4,19 @@ from random import randint
 #Joue un coup aléatoire parmi ceux possibles
 def Aleatoire(t, joueur):
     listeCoupsPossibles = []
-    print(listeCoupsPossibles)
+    #print(listeCoupsPossibles)
     for i in range(Dim):
         for j in range(Dim):
             if position_valide(t,i,j,joueur):
                 listeCoupsPossibles.append((i,j))#ajoute les coordonnées d'un
 #coup valide dans un tuple
-    print (listeCoupsPossibles)
+    #print (listeCoupsPossibles)
     coup = randint(0, len(listeCoupsPossibles) -1)
-    print("coup joué par IA :" + str(listeCoupsPossibles[coup][0]) 
- + " " + str(listeCoupsPossibles[coup][0]))
-    print("Joueur de l'IA :" + str(joueur))
+   # print("coup joué par IA :" + str(listeCoupsPossibles[coup][0]) 
+# + " " + str(listeCoupsPossibles[coup][0]))
+    #print("Joueur de l'IA :" + str(joueur))
     jouer(listeCoupsPossibles[coup][0], listeCoupsPossibles[coup][1], joueur)
-    afficher_tableau(Matrice)
+    #afficher_tableau(Matrice)
 
 def Maximiser(t, joueur):
     print(joueur)

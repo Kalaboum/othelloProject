@@ -18,5 +18,6 @@ def attendre_tour_humain(t, joueur):
             Aleatoire(t, prochain_joueur)
         elif type_prochain_joueur == "IAMaximiser":
             Maximiser(t,prochain_joueur)
+        ajouter_tableau_sauvegarde(Matrice)
      #   elif type_prochain_joueur == "Negamax":
 #Appeler fonction Negamax quand elle sera opé

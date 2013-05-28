@@ -19,7 +19,8 @@ def recopie_et_numerote_les_lignes(nom_fichier_entree,nom_fichier_sortie):
         cpt+=1
     fichier.close()
 
-# Pour création du fichier, creer_fichier_jeu prend en parametre (N,jouer,tableau ( qui contient les matrices a chaque tour,
+# Pour création du fichier, creer_fichier_jeu prend en parametre (N,jouer,tableau ( qui contient
+# les matrices a chaque tour,
 #le dernier element etant celui du dernier coup joué),nom du fichier de sauvegarde)
 
 def delete(string): #Il existe sans doute mieux, mais j'ai ça en attendant
@@ -28,7 +29,8 @@ def delete(string): #Il existe sans doute mieux, mais j'ai ça en attendant
 
 #classe de nom_fichier : string
 
-def creer_fichier_jeu(_Dim_, _joueur_actif_, _tableau_sauvegarde_, nom_fichier): # Correspond a sauvegarder sous
+def creer_fichier_jeu(_Dim_, _joueur_actif_, _tableau_sauvegarde_, nom_fichier): # Correspond a
+    #sauvegarder sous
     fichier_destination=open(nom_fichier,"w") #On charge/cree le fichier de destination
     chaine="{0}~{1}~{2}".format(_Dim_,_joueur_actif_,_tableau_sauvegarde_) # On formate ce qu'il nous faut
     print(chaine,file=fichier_destination,end="~") # On met ce qu'il  nous faut dans le fichier
@@ -58,8 +60,11 @@ def lire_fichier_jeu(nom_fichier):
     set_joueur_actif(eval(variable_a_modif[1]))
     set_tableau_sauvegarde(eval(variable_a_modif[2]))
     set_Matrice(get_element_tableau_sauvegarde(-1))
+    print(get_Dim())
+    print(get_joueur_actif())
+    print(get_tableau_sauvegarde())
+    print(get_Matrice())
     fichier_a_charger.flush()
-        
         
 
 
