@@ -96,17 +96,17 @@ def creation_grille(param):
 
 # fonction liée au module sauvegarde:
 
-def chargement_de_partie():            # Au moment ou l'on charge, le jeu attend qu'un joueur joue : peut etre faire
+def chargement_de_partie():# Au moment ou l'on charge, le jeu attend qu'un joueur joue : peut etre faire
     nom_fichier=askopenfilename()
     lire_fichier_jeu(nom_fichier)       # attention a l'IA, je te laisse voir ça, dit moi si j'ai des choses a edit
     actualiser_plus()                       #Mais normalement c'est bon, car le joueur ne peut agir que si c'est a lui de jouer ;)
-    set_mon_fichier(nom_fichier)
     
 def sauvegarde_de_partie_sous():
     nom_fichier=asksaveasfilename()
     if mon_fichier != ():
         creer_fichier_jeu(get_Dim(),get_joueur_actif(),get_tableau_sauvegarde(),nom_fichier)
-    set_mon_fichier(nom_fichier)
+    print(mon_fichier)
+    
     
 def sauvegarde_de_partie(nom_fichier):
     test=edit_fichier_jeu(get_Dim(),get_joueur_actif(),get_tableau_sauvegarde(), nom_fichier)
@@ -169,7 +169,7 @@ filemenu = Menu(menubar)
 menubar.add_cascade(label="Fichier", menu=filemenu)
 filemenu.add_command(label="Ouvrir...", command=lambda:chargement_de_partie())
 filemenu.add_separator()
-filemenu.add_command(label="Sauvegarder", command=lambda:sauvegarde_de_partie(mon_fichier))
+filemenu.add_command(label="Sauvegarder", command=lambda:sauvegarde_de_partie(get_mon_fichier()))
 filemenu.add_separator()
 filemenu.add_command(label="Sauvegarder sous ...", command=lambda:sauvegarde_de_partie_sous())
 filemenu.add_separator()

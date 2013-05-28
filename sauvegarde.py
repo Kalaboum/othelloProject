@@ -16,16 +16,8 @@ def set_mon_fichier(string):
     global mon_fichier
     mon_fichier= string
 
-def recopie_et_numerote_les_lignes(nom_fichier_entree,nom_fichier_sortie):
-    fichier=open(nom_fichier_entree,"r") 
-    fichier_d=open(nom_fichier_sortie,"w") 
-    chaine=fichier.readline() 
-    cpt=0
-    while len(chaine) != 0 or chaine[0]:
-        print(str(cpt)+' '+ chaine,file=fichier_d,end='')
-        chaine=fichier.readline()
-        cpt+=1
-    fichier.close()
+def get_mon_fichier():
+    return mon_fichier
 
 # Pour création du fichier, creer_fichier_jeu prend en parametre (N,jouer,tableau ( qui contient
 # les matrices a chaque tour,
@@ -37,25 +29,28 @@ def delete(string): #Il existe sans doute mieux, mais j'ai ça en attendant
 
 #classe de nom_fichier : string
 
-def creer_fichier_jeu(_Dim_, _joueur_actif_, _tableau_sauvegarde_, nom_fichier): # Correspond a
-    #sauvegarder sous
+def creer_fichier_jeu(_Dim_, _joueur_actif_, _tableau_sauvegarde_, nom_fichier):
+     # Correspond a sauvegarder sous
+    set_mon_fichier(nom_fichier)
     fichier_destination=open(nom_fichier,"w") #On charge/cree le fichier de destination
     chaine="{0}~{1}~{2}".format(_Dim_,_joueur_actif_,_tableau_sauvegarde_) # On formate ce qu'il nous faut
     print(chaine,file=fichier_destination,end="~") # On met ce qu'il  nous faut dans le fichier
     fichier_destination.flush()
 
-def edit_fichier_jeu(_Dim_,_joueur_acti_f,_tableau_sauvegarde_, nom_fichier): # Difficile de faire mieux avec notre formatage de sauvegarde
-    if mon_fichier != None: #Si on sauvegarde sur la partie, seul le joueur_actif et la matrice de sauvegarde sont a changer
+def edit_fichier_jeu(_Dim_,_joueur_actif_,_tableau_sauvegarde_, nom_fichier): # Difficile de faire mieux avec notre formatage de sauvegarde
+    print(get_mon_fichier())
+    if get_mon_fichier() != None:#Si on sauvegarde sur la partie, seul le joueur_actif et la matrice de sauvegarde sont a changer
+        print("l'oréal, parce que je ne vaux rien")
         fichier_destination=open(mon_fichier,"w") #On charge/cree le fichier de destination
-        for ligne in mon_fichier.readlines():
-            delete(ligne)
         chaine="{0}~{1}~{2}".format(_Dim_, _joueur_actif_,_tableau_sauvegarde_) # On formate ce qu'il nous faut
         print(chaine,file=fichier_destination,end="~") # On met ce qu'il  nous faut dans le fichier
         fichier_destination.flush()
+        return "cacahuète"
     else:
         return mon_fichier # return None, mais plus secure
     
 def lire_fichier_jeu(nom_fichier):
+    set_mon_fichier(nom_fichier)
     fichier_a_charger=open(nom_fichier,"r") 
     for ligne in fichier_a_charger.readlines():
         variable_a_modif= (str(ligne).rstrip('\n').split("~")) 
@@ -64,14 +59,11 @@ def lire_fichier_jeu(nom_fichier):
         #indice 1 : le joueur_actif
         #indice 2 : Un tableau de sauvegarde contenant mes matrices d'état de jeu 
         #(tableau de matrice)
+        print(variable_a_modif)
     set_Dim(eval(variable_a_modif[0]))
     set_joueur_actif(eval(variable_a_modif[1]))
     set_tableau_sauvegarde(eval(variable_a_modif[2]))
     set_Matrice(get_element_tableau_sauvegarde(-1))
-    print(get_Dim())
-    print(get_joueur_actif())
-    print(get_tableau_sauvegarde())
-    print(get_Matrice())
     fichier_a_charger.flush()
         
 
