@@ -9,6 +9,7 @@ maxdepth = 3
 def set_maxdepth(n):
     global maxdepth
     maxdepth = n
+    
 #Joue un coup aléatoire parmi ceux possibles
 def Aleatoire(t, joueur):
     l = liste_coups_possibles(t, joueur)
@@ -29,20 +30,26 @@ def Maximiser(t, joueur):
                 meilleur_coup = (i,j)
     jouer(meilleur_coup[0], meilleur_coup[1], joueur)
 
-def Negamax(t, joueur, depth, maxdepth):
+def Negamax(t, joueur, depth, maxdepth): #Observations valeur_courante toujours
+    print("profondeur" + str(depth)) #locale, trouver une autre méthode
     if depth == maxdepth:
-        return evaluer(t, joueur) #TODO créer une fonction evaluer
+        valeur_courante = evaluer(t, joueur)
+        return
     else:
-        meilleur_valeur = -sys.maxint
+        meilleure_valeur = -20000
+        valeur_courante = -20000
         l = liste_coups_possibles(t,joueur)
         for i in range(len(l)):
+            print("la valeur_courante est:" + str(valeur_courante))
             jouer(l[i][0], l[i][0], joueur)
-            valeur_courante = Negamax(Matrice, -joueur, depth + 1, maxdepth)
-            undo #TODO faire une fonction undo
+            ajouter_tableau_sauvegarde(Matrice)
+            Negamax(Matrice, -joueur, depth + 1, maxdepth)
+            print("la valeur_courant après Negamax est:" + str(valeur_courante))
+            undo(1)
             valeur_courante = -valeur_courante
             if meilleure_valeur < valeur_courante:
-                meilleur_valeur = valeur_courante
+                meilleure_valeur = valeur_courante
                 meilleur_coup = l[i]
         if len(l) == 0:
-            Negamax(Matrice -joueur, depth + 1, maxdepth)
+            Negamax(Matrice, -joueur, depth + 1, maxdepth)
     return meilleur_coup

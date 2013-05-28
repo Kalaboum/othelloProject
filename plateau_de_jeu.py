@@ -17,7 +17,7 @@ dj=[1,1,0,-1,-1,-1,0,1]
 joueur_actif = 1# Joueur blanc: -1 | Joueur noir: 1
 Matrice=creer_tableau(Dim,Dim,0)
 Humain_peut_jouer = True
-type_joueur = ["IAMaximiser",None,"Humain"] #Bricolage, voir comment faire
+type_joueur = ["Negamax",None,"Humain"] #Bricolage, voir comment faire
 # mieux
 tableau_sauvegarde = [] #Tableau contenant toutes les matrices de jeu
 
