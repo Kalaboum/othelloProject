@@ -20,5 +20,5 @@ def attendre_tour_humain(t, joueur):
             Maximiser(t,prochain_joueur)
         elif type_prochain_joueur == "Negamax":
             tupl = Negamax(Matrice, prochain_joueur, 0, maxdepth)
-            jouert(tupl[0],tupl[1],prochain_joueur)
+            jouer(tupl[1][0],tupl[1][1],prochain_joueur)
         ajouter_tableau_sauvegarde(Matrice)
