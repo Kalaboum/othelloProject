@@ -84,13 +84,29 @@ def supprimer_n_elements_sauvegarde(n):
         tableau_sauvegarde.pop()
         
 # les fontions
+def avant_dernier_joueur():
+    if len(get_tableau_sauvegarde()) >= 3:
+        t1 = get_element_tableau_sauvegarde(-2)
+        t2 = get_element_tableau_sauvegarde(-3)
+        if score_absolu(t1,1) > score_absolu(t2,1):
+            return 1
+        return -1
+    return get_joueur_actif()
+
+def dernier_joueur():
+    if len(get_tableau_sauvegarde()) >= 2:
+        t1 = get_element_tableau_sauvegarde(-1)
+        t2 = get_element_tableau_sauvegarde(-2)
+        if score_absolu(t1,1) > score_absolu(t2,1):
+            return 1
+        return -1
+    return get_joueur_actif()
 
 def undo(n):
-    if len(tableau_sauvegarde)>= n:
+    print("longueur du tableau_sauvegarde" + str(len(tableau_sauvegarde)))
+    if len(tableau_sauvegarde)> n:
         supprimer_n_elements_sauvegarde(n)
         set_Matrice(tableau_sauvegarde[-1])
-        if n%2==1:
-            set_joueur_actif(-get_joueur_actif())
 
 def initialiser_Matrice():
     global Matrice
@@ -124,7 +140,7 @@ def afficher_plateau(t):
 
     
 
-def score_absolu(t, joueur): # Utile pour le Negamax ;) (Je voyais plus pourquoi tu voulais tant cette fonction :p )
+def score_absolu(t, joueur): 
     count = 0
     for i in t:
         for j in i:

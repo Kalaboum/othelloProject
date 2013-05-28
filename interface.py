@@ -31,12 +31,19 @@ def actualiser_plus():
     creation_grille(DB)
     actualiser()
 
-def n_coup_avant(): #TODO fonction dernier joueur
-    if get_typejoueur(-get_joueur_actif()) != "Humain":
-        undo(2)
-    else:
+def n_coup_avant(): 
+    joueur = get_joueur_actif()
+    if get_typejoueur(joueur) == get_typejoueur(-joueur):
         undo(1)
-        set_joueur_actif(-get_joueur_actif())
+        if dernier_joueur() != joueur:
+            set_joueur_actif(-joueur)
+    else:
+        if dernier_joueur() == joueur:
+            undo(1)
+        elif dernier_joueur() != avant_dernier_joueur():
+            undo(2) 
+        else: #si IA joué deux fois avant nous
+            undo(3)
     actualiser_plus()
         
 def actualiser():
@@ -139,6 +146,7 @@ def renitialiser():
     creation_grille(DB)
     initialiser_tableau(Matrice,0)
     initialiser_Matrice()
+    set_tableau_sauvegarde([get_Matrice()])
     actualiser()
     
 
