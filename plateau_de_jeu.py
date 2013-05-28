@@ -194,3 +194,26 @@ def trouver_prochain_joueur(t, joueur):
         if not peut_jouer(t, prochain_joueur):
             return None
     return prochain_joueur
+
+def liste_coups_possibles(t, joueur):
+    l = []
+    for i in range(Dim):
+        for j in range(Dim):
+            if position_valide(t,i,j,joueur):
+                l.append((i,j)) #ajoute les coordonnées d'un coup valide
+# dans un tuple
+    return l
+
+def evaluer(t, joueur):
+    score = 0
+    for i in range(Dim):
+        #Surpondération des coins et des bords
+        for j in range(Dim):
+            if (i == 0 or i == Dim-1) and (j == 0 or j == Dim-1):
+                score += 4*t[i][j]
+            elif i == 0 or i == Dim-1 or j == 0 or j == Dim -1:
+                score += 2* t[i][j]
+            else:
+                score += t[i][j]
+    return score * joueur
+        

@@ -2,7 +2,15 @@ from jeu import *
 
 #Certains com sont pour voir des truc a changer eventuellement
 
-mon_fichier= None # Nom du fichier qui a été import ou deja sauvegarder durant la partie (permet une option sauv. et sauv sous ..)
+# J'ai fait un test avec les getters et setters, quand on a une fenêtre lancée
+# sauvegarder_sous marche et ouvrir aussi. Il reste le problème de sauvegarder
+# qui a une erreur type string has not readline attribut. Et un problème index
+# out of range quand on charge une sauvegarde qui n'a pas été effectuée sur la
+# même fenêtre. Je commit en attendant et je regarde si je peux avoir une version
+# plus stable
+
+mon_fichier= None # Nom du fichier qui a été import ou deja sauvegarder durant
+# la partie (permet une option sauv. et sauv sous ..)
 
 def set_mon_fichier(string):
     global mon_fichier
