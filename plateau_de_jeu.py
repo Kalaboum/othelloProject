@@ -216,3 +216,21 @@ def nbr_retournes(t, i, j, joueur):
     for dir in range(8):
         retournes += tester_position(t,i,j,dir,joueur)
     return retournes
+
+def score_pos(t, i, j):
+    if (i == 0 or i == Dim -1) and (j==0 or j == Dim -1):
+        return 1000
+    elif (i == 0 or i == 1 or i == Dim-1 or i == Dim-2)\
+        and (j == 0 or j == 1 or j == Dim-1 or j  == Dim-2):
+        return -100
+    elif i == 0 or i == Dim-1 or j== 0 or j== Dim-1:
+        return 100
+    else:
+        return 1
+        
+def evaluer_v2(t, joueur):
+    score = 0
+    for i in range(Dim):
+        for j in range(Dim):
+            score += score_pos(t,i,j) * t[i][j]
+    return score

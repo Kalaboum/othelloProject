@@ -4,7 +4,7 @@ import sys
 
 #Paramètres de l'IA Negamax
 depth = 0
-maxdepth = 6
+maxdepth = 5
 
 def set_maxdepth(n):
     global maxdepth
@@ -81,7 +81,7 @@ def Negamax_alpha_beta(t, joueur, depth, maxdepth, alpha, beta):
 def Negamax_alpha_beta_empowered(t, joueur, depth, maxdepth, alpha, beta):
     meilleur_coup = None # ça joue
     if depth == maxdepth:
-        return (evaluer(t, joueur), 0)
+        return (evaluer_v2(t, joueur), 0)
     else:
         meilleure_valeur = alpha
         l = liste_coups_possibles(t,joueur)
