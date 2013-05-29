@@ -103,7 +103,6 @@ def dernier_joueur():
     return get_joueur_actif()
 
 def undo(n):
-    print("longueur du tableau_sauvegarde" + str(len(tableau_sauvegarde)))
     if len(tableau_sauvegarde)> n:
         supprimer_n_elements_sauvegarde(n)
         set_Matrice(tableau_sauvegarde[-1])
@@ -117,28 +116,6 @@ def initialiser_Matrice():
     Matrice[Dim//2][Dim//2 -1]=1
     tableau_sauvegarde=[]
     ajouter_tableau_sauvegarde(Matrice)
-    
-def afficher_ligne():
-    for i in range(Dim):
-        sys.stdout.write("---")
-
-def afficher_plateau(t):
-    afficher_ligne()
-    print(" ")
-    for i in range(get_Dim()):
-        for j in range(get_Dim()):
-            if t[i][j] == 0:
-                sys.stdout.write("  ")
-            elif t[i][j] == -1:
-                sys.stdout.write("-1")
-            else:
-                sys.stdout.write(" 1")
-            sys.stdout.write('|')
-        print("")
-        afficher_ligne()
-        print('')
-
-    
 
 def score_absolu(t, joueur): 
     count = 0

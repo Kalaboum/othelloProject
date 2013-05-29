@@ -5,7 +5,6 @@ from tkinter import *
 from sauvegarde import *
 from tkinter.filedialog import *
 
-afficher_plateau(Matrice)
 
 #Les widgets:
 fen = Tk()
@@ -61,7 +60,6 @@ def actualiser():
     else :
          Score.config(text=" Blanc : " + str(score_actuel[0])+" | Noir : "
                       + str(score_actuel[1]) + " , Joueur : Noir")
-    print(get_tableau_sauvegarde())
     
 def clique_gauche(event):
     j=(event.x - DB )//TAILLE_CASE
@@ -120,16 +118,10 @@ def sauvegarde_de_partie(nom_fichier):
     if test == None:
         sauvegarde_de_partie_sous()
     
-#Revoir la fonction: global Matrice pas forcément utile
 def jouer_coup(t,i,j):
     global Matrice
     joueur= get_joueur_actif()
-    #print("Le joueur est" + str(joueur)) 
- #Test ici ?
-    #print("joueur_actif avant jouer" + str(joueur_actif))
     test=jouer(i,j, joueur)
-    #print("joueur_actif : "+ str(get_joueur_actif()))
-    # Ainsi un coup invalide ne change pas le joueur actif 
     if  test == None:
         return
     ajouter_tableau_sauvegarde(Matrice)

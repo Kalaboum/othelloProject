@@ -1,3 +1,23 @@
+def afficher_ligne():
+    for i in range(Dim):
+        sys.stdout.write("---")
+
+def afficher_plateau(t):
+    afficher_ligne()
+    print(" ")
+    for i in range(get_Dim()):
+        for j in range(get_Dim()):
+            if t[i][j] == 0:
+                sys.stdout.write("  ")
+            elif t[i][j] == -1:
+                sys.stdout.write("-1")
+            else:
+                sys.stdout.write(" 1")
+            sys.stdout.write('|')
+        print("")
+        afficher_ligne()
+        print('')
+
 def creer_tableau(h, l, val):
     t = [None]*h 
     for i in range(h):
