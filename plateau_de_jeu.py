@@ -17,7 +17,7 @@ dj=[1,1,0,-1,-1,-1,0,1]
 joueur_actif = 1# Joueur blanc: -1 | Joueur noir: 1
 Matrice=creer_tableau(Dim,Dim,0)
 Humain_peut_jouer = True
-type_joueur = ["Negamax",None,"Humain"] #Bricolage, voir comment faire
+type_joueur = ["Negamax_alpha_beta_empowered",None,"Humain"] #Bricolage, voir comment faire
 # mieux
 tableau_sauvegarde = [] #Tableau contenant toutes les matrices de jeu
 
@@ -83,7 +83,8 @@ def supprimer_n_elements_sauvegarde(n):
     for i in range(n):
         tableau_sauvegarde.pop()
         
-# les fontions
+# les fonctions
+
 def avant_dernier_joueur():
     if len(get_tableau_sauvegarde()) >= 3:
         t1 = get_element_tableau_sauvegarde(-2)
@@ -209,4 +210,9 @@ def evaluer(t, joueur):
             else:
                 score += t[i][j]
     return score * joueur
-        
+
+def nbr_retournes(t, i, j, joueur):
+    retournes = 0
+    for dir in range(8):
+        retournes += tester_position(t,i,j,dir,joueur)
+    return retournes
