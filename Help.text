@@ -1,0 +1,28 @@
+Bienvenue dans l'aide de l'Othello de HOFER Nataniel et DELMAS Rémi !
+
+Regles du jeu:
+    
+Noir commence toujours la partie. Puis les joueurs jouent à tour de rôle,
+chacun étant tenu de capturer des pions adverses lors de son mouvement. 
+Si un joueur ne peut pas capturer de pion(s) adverse(s), il est forcé
+de passer son tour. 
+Si aucun des deux joueurs ne peut jouer, ou si l'othellier ne comporte
+plus de case vide, la partie s'arrête. 
+Le gagnant en fin de partie est celui qui possède le plus de pions.
+
+La capture de pions survient lorsqu'un joueur place un de ses pions à
+l'extrémité d'un alignement de pions adverses contigus et dont l'autre
+extrémité est déjà occupée par un de ses propres pions. 
+Les alignements considérés peuvent être une colonne, une ligne, ou une
+diagonale. 
+Si le pion nouvellement placé vient fermer plusieurs alignements, il capture
+tous les pions adverses des lignes ainsi fermées. 
+La capture se traduit par le retournement des pions capturés. Ces retournements
+n'entraînent pas d'effet de capture en cascade : seul le pion nouvellement
+posé est pris en compte.
+
+Notre version vous proposes plusieurs IA, un systeme de sauvegarde, de switch
+d'IA et de mode de jeu en cour de partie, alors amusez vous bien !
+
+
+

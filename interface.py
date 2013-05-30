@@ -1,20 +1,22 @@
 # -*- coding:utf-8 -*-
 #V2 !
 
+from tkinter.messagebox import showinfo
 from tkinter import *
 from sauvegarde import *
 from tkinter.filedialog import *
+
 
 afficher_plateau(Matrice)
 
 #Les widgets:
 fen = Tk()
-Position= Label(fen)
+Position= Label(fen,font='ChintzyCPUBRK')
 Score= Label(fen,text=" Blanc : 2 | Noir : 2 , Joueur : Noir",relief="groove",font='ChintzyCPUBRK',height=2)
 
 #Variables globales + Matrice du tableau:
 
-TAILLE_CASE=50 #Taille des cases c'est en fait N//8
+TAILLE_CASE=400//Dim #Taille des cases 
 r=25 # Rayon des pions
 DELTA=3 # Marge pions cases pour aspect visuel
 DB = 60 # Décalage lié a la bordure style "bois"
@@ -48,25 +50,28 @@ def n_coup_avant():
         
 def actualiser():
     Copie=get_Matrice()
-    for i in range(Dim):
-        for j in range(Dim):
-            if Copie[i][j]==-1:
-                creer_pion(i,j,"white","#3C3C3C")
-            elif Copie[i][j]==1:
-                creer_pion(i,j,"black","#3C3C3C")
-    score_actuel=score(Copie)
-    if get_joueur_actif()==-1:
-         Score.config(text=" Blanc : " + str(score_actuel[0])+" | Noir : "
-                      + str(score_actuel[1]) + " , Joueur : Blanc")
-    else :
-         Score.config(text=" Blanc : " + str(score_actuel[0])+" | Noir : "
-                      + str(score_actuel[1]) + " , Joueur : Noir")
-    print(get_tableau_sauvegarde())
+    if peut_jouer(Copie,get_joueur_actif()) or peut_jouer(Copie,-get_joueur_actif()):
+        for i in range(Dim):
+            for j in range(Dim):
+                if Copie[i][j]==-1:
+                    creer_pion(i,j,"white","#3C3C3C")
+                elif Copie[i][j]==1:
+                    creer_pion(i,j,"black","#3C3C3C")
+                score_actuel=score(Copie)
+                if get_joueur_actif()==-1:
+                    Score.config(text=" Blanc : " + str(score_actuel[0])+" | Noir : "
+                                 + str(score_actuel[1]) + " , Joueur : Blanc")
+                else :
+                    Score.config(text=" Blanc : " + str(score_actuel[0])+" | Noir : "
+                                 + str(score_actuel[1]) + " , Joueur : Noir")
+    else:
+        showinfo('Fin de partie','Le joueur avec les pions '+str(joueur_victorieux( get_Matrice() ))+' remporte la victoire !')
+    
     
 def clique_gauche(event):
     j=(event.x - DB )//TAILLE_CASE
     i=(event.y - DB )//TAILLE_CASE
-    if 0<=i<=7 and 0<=j<=7 and Humain_peut_jouer:
+    if 0<=i<=Dim-1 and 0<=j<=Dim-1 and Humain_peut_jouer:
         set_Humain_peut_jouer(False)
         jouer_coup(Matrice,i,j)
     
@@ -79,13 +84,13 @@ def mouvement(event):
     global tableau_surbrillance, fond
     j=(event.x - DB )//TAILLE_CASE
     i=(event.y - DB )//TAILLE_CASE
-    if 0<=i<=7 and 0<=j<=7:
+    if 0<=i<=Dim-1 and 0<=j<=Dim-1:
         if (i,j) != (tableau_surbrillance[0]):
             fond.delete(tableau_surbrillance[1])
             tableau_surbrillance[0]=None
             Position.configure(text="X : "+ str(j) + " - Y : " + str(i),font='ChintzyCPUBRK')
-            if position_valide(get_Matrice(),i,j,joueur_actif) and (tableau_surbrillance[0]) != (i,j):
-                if joueur_actif==1:
+            if position_valide(get_Matrice(),i,j,get_joueur_actif()) and (tableau_surbrillance[0]) != (i,j):
+                if get_typejoueur(get_joueur_actif())=="Humain":
                     surbrillance=creer_pion(i,j,"#85C692","#85C692")
                 tableau_surbrillance=[(i,j),surbrillance]
     else:
@@ -135,7 +140,27 @@ def jouer_coup(t,i,j):
     ajouter_tableau_sauvegarde(Matrice)
     attendre_tour_humain(t,joueur)
     actualiser()
+
+#Choix du mode :
+
+def mode_IA():
+    set_typejoueur(-1,"IAMaximiser")
+    fenetre.destroy()
     
+def mode_1v1():
+    set_typejoueur(-1,"Humain")
+    fenetre.destroy()
+    
+def selection_parametres():
+    fenetre.focus_set() # On passe le focus a notre nouvelle fenetre
+    fenetre.title("Initialisation")
+    texte=Label(fenetre,text="Mode de jeu : ",font='ChintzyCPUBRK')
+    HumvHum =Button(fenetre,text= "Joueur vs Joueur",font='ChintzyCPUBRK',command=mode_1v1,width=15,height=2)
+    IAvs1=Button(fenetre,text= "Joueur vs IA",font='ChintzyCPUBRK',command=mode_IA,width=15,height=2)
+    texte.pack(side=TOP)
+    IAvs1.pack()
+    HumvHum.pack()
+    texte.pack(side=TOP)
     
 #Mes Canvas + Fonction d'initialisation
 
@@ -149,9 +174,7 @@ def renitialiser():
     set_tableau_sauvegarde([get_Matrice()])
     actualiser()
     
-
-
-photo=PhotoImage(file="grille.gif") # Ouverture de l'image
+photo=PhotoImage(file="grille.gif") # Ouverture de l'image de fond
 largeur=photo.width() # Détermination de la largeur de l'image
 hauteur=photo.height() # Détermination de la hauteur de l'image
 fen.title("Othello Project - HOFER - DELMAS") # Titre de la fenêtre
@@ -162,15 +185,15 @@ img=fond.create_image(largeur/2,hauteur/2,image=photo) # Positionnement de l'ima
 renitialiser()
 
 #Mes Boutons:
-bouton_undo=Button(fen,text='Undo',command=n_coup_avant, font='ChintzyCPUBRK',height=3)
+bouton_undo=Button(fen,text="Undo",command=n_coup_avant,font='ChintzyCPUBRK',cursor="dotbox",height=3,relief="groove")
 bouton_undo.pack(side=RIGHT)
 
-bouton_renitialiser= Button(fen, text='Reinitialiser', command=renitialiser, font="ChintzyCPUBRK",height=3)
+bouton_renitialiser= Button(fen, text='Reinitialiser', command=renitialiser, font="ChintzyCPUBRK",height=3,cursor="dotbox",relief="groove")
 bouton_renitialiser.pack(side=LEFT)
 
 #Le Menu
 
-menubar = Menu(fen) #Pris dans l'exemple du cour
+menubar = Menu(fen,font='ChintzyCPUBRK') #Pris dans l'exemple du cour
 fen.config(menu=menubar)
 
 filemenu = Menu(menubar)
@@ -183,14 +206,30 @@ filemenu.add_command(label="Sauvegarder sous ...", command=lambda:sauvegarde_de_
 filemenu.add_separator()
 filemenu.add_command(label="Quitter", command=fen.destroy)
 
+optionmenu= Menu(menubar)
+menubar.add_cascade(label="Option", menu=optionmenu)
+optionmenu.add_command(label="Changer mode de jeu", command=lambda:changement_mode_de_jeu())
+optionmenu.add_separator()
+optionmenu.add_command(label="Niveau IA +", command=lambda:niveau_IA(1))
+optionmenu.add_separator()
+optionmenu.add_command(label="Niveau IA -", command=lambda:niveau_IA(-1))
+
+helpmenu= Menu(menubar)
+menubar.add_cascade(label="Aide", menu=helpmenu)
+helpmenu.add_command(label='Aide',command=lambda:afficher_aide())
+
+
+
+
 #Mes Callbacks :
 
 fond.bind("<Button-1>",clique_gauche )
 fond.bind("<Motion>", mouvement)
 
-
 Position.pack()
 Score.pack()
 
-
 fond.pack()
+
+fenetre=Toplevel()
+selection_parametres()

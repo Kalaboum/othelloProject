@@ -26,6 +26,12 @@ def nb_occurences_tableau(t,val):
                 cpt += 1
     return cpt
 
+def indice_occurence(t,tupl): #renvoie l'indice de la premiere occurence de tupl dans t
+    for i in range(len(t)):
+        if t[i]==tupl:
+            return i
+    
+
 
 
 

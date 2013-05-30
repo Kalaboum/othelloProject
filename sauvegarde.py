@@ -1,4 +1,5 @@
 from jeu import *
+from subprocess import call
 
 #Certains com sont pour voir des truc a changer eventuellement
 
@@ -65,6 +66,11 @@ def lire_fichier_jeu(nom_fichier):
     set_tableau_sauvegarde(eval(variable_a_modif[2]))
     set_Matrice(get_element_tableau_sauvegarde(-1))
     fichier_a_charger.flush()
+
+def afficher_aide():
+    call(["kdialog","--textbox","Help.text"])
+        
+    
         
 
 

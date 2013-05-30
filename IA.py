@@ -4,12 +4,15 @@ import sys
 
 #Paramètres de l'IA Negamax
 depth = 0
-maxdepth = 4
+maxdepth = None
 
 def set_maxdepth(n):
     global maxdepth
     maxdepth = n
-    
+
+def get_maxdepth():
+    return maxdepth
+
 #Joue un coup aléatoire parmi ceux possibles
 def Aleatoire(t, joueur):
     l = liste_coups_possibles(t, joueur)
@@ -30,7 +33,7 @@ def Maximiser(t, joueur):
                 meilleur_coup = (i,j)
     jouer(meilleur_coup[0], meilleur_coup[1], joueur)
 
-def Negamax(t, joueur, depth, maxdepth): #Je pense pas qu'elle soit juste, mais
+def Negamax(t, joueur, depth,maxdepth): #Je pense pas qu'elle soit juste, mais
     meilleur_coup = None # ça joue
     if depth == maxdepth:
         return (evaluer(t, joueur), 0)

@@ -12,12 +12,12 @@ import sys
 # TO DO: Pouvoir initialiser les variables par l'interface graphique
 # Ps : sens trigo dans ordre croissant
 Dim=8 #Cote du tableau, voila, changement ^^
-di=[0,-1,-1,-1,0,1,1,1] 
+di=[0,-1,-1,-1,0,1,1,1]
 dj=[1,1,0,-1,-1,-1,0,1]
 joueur_actif = 1# Joueur blanc: -1 | Joueur noir: 1
 Matrice=creer_tableau(Dim,Dim,0)
 Humain_peut_jouer = True
-type_joueur = ["Negamax",None,"Humain"] #Bricolage, voir comment faire
+type_joueur = ["Humain",None,"Humain"] #Bricolage, voir comment faire
 # mieux
 tableau_sauvegarde = [] #Tableau contenant toutes les matrices de jeu
 
@@ -84,6 +84,7 @@ def supprimer_n_elements_sauvegarde(n):
         tableau_sauvegarde.pop()
         
 # les fontions
+
 def avant_dernier_joueur():
     if len(get_tableau_sauvegarde()) >= 3:
         t1 = get_element_tableau_sauvegarde(-2)
@@ -107,6 +108,11 @@ def undo(n):
     if len(tableau_sauvegarde)> n:
         supprimer_n_elements_sauvegarde(n)
         set_Matrice(tableau_sauvegarde[-1])
+
+def joueur_victorieux(t):
+    if score_blanc(t)>score_noir(t):
+        return "blancs"
+    return "noirs"
 
 def initialiser_Matrice():
     global Matrice
@@ -138,8 +144,6 @@ def afficher_plateau(t):
         afficher_ligne()
         print('')
 
-    
-
 def score_absolu(t, joueur): 
     count = 0
     for i in t:
@@ -148,10 +152,14 @@ def score_absolu(t, joueur):
                 count += 1
     return count
 
+def score_blanc(t):
+    return nb_occurences_tableau(t,-1)
+
+def score_noir(t):
+    return nb_occurences_tableau(t,1)
+
 def score(t):
-    score_blanc = nb_occurences_tableau(Matrice,-1)
-    score_noir = nb_occurences_tableau(Matrice,1)
-    return (score_blanc,score_noir)
+    return (score_blanc(t),score_noir(t))
 
 def tester_position(t,i,j,dir,joueur):
     if t[i][j] == 0:
