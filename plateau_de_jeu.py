@@ -5,7 +5,6 @@ from tableaux import *
 
 Dim=8 
 di=[0,-1,-1,-1,0,1,1,1] 
->>>>>>> d2a3e5aa88fa831095ac5e5e6f72cb25e883cbf4
 dj=[1,1,0,-1,-1,-1,0,1]
 joueur_actif = 1# Joueur blanc: -1 | Joueur noir: 1
 Matrice=creer_tableau(Dim,Dim,0)

@@ -11,7 +11,8 @@ def moyenne(temps, coups):
         tot += temps[i]
     return tot/coups
 
-IA_disponible=[("IAAleatoire",None),("IAMaximiser",None),("Negamax",2),("Negamax",4),("Negamax",6)]
+IA_disponible=[("IAAleatoire",None),("IAMaximiser",None),("Negamax_alpha_beta_empowered",2),\
+               ("Negamax_alpha_beta_empowered",4),("Negamax_alpha_beta_empowered",6)]
 
 #Passe la main aux IA avant le prochain tour humain
 def attendre_tour_humain(t, joueur):
@@ -36,11 +37,11 @@ def attendre_tour_humain(t, joueur):
             tupl = Negamax(Matrice, prochain_joueur, 0, get_maxdepth())
             jouer(tupl[1][0],tupl[1][1],prochain_joueur)
         elif type_prochain_joueur == "Negamax_alpha_beta":
-            tupl = Negamax_alpha_beta(Matrice, prochain_joueur, 0, maxdepth,
+            tupl = Negamax_alpha_beta(Matrice, prochain_joueur, 0,get_maxdepth(),
                                       -10000000,10000000)
             jouer(tupl[1][0],tupl[1][1],prochain_joueur)
         elif type_prochain_joueur == "Negamax_alpha_beta_empowered":
-            tupl = Negamax_alpha_beta_empowered(Matrice, prochain_joueur, 0, maxdepth,
+            tupl = Negamax_alpha_beta_empowered(Matrice, prochain_joueur, 0, get_maxdepth(),
                                       -10000000,10000000)
             jouer(tupl[1][0],tupl[1][1],prochain_joueur)
         ajouter_tableau_sauvegarde(Matrice)
@@ -59,8 +60,6 @@ def niveau_IA(n):
     if 0 <= n+indice_dans_IA_disponible <= len(IA_disponible)-1:
         set_typejoueur(-1,IA_disponible[n+indice_dans_IA_disponible][0])
         set_maxdepth(IA_disponible[n+indice_dans_IA_disponible][1])
-    print("IA : "+ str(get_typejoueur(-1))+" | maxdepth : "+ str(get_maxdepth()))
-    print(maxdepth)
 
 def changement_mode_de_jeu():
     if get_typejoueur(-1)=="Humain":
