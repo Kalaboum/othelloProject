@@ -1,27 +1,22 @@
 from tableaux import *
-import sys
 
-####### IMPORTANT ########
+#Déclaration des variables globales et leurs valeurs par défaut
 
-#J'ai changer en N en Dim, car c'étais une variable globale du module
-#tkinter.filedialog, j'ai galerer comme un connard pendant 30min
-#pour trouver que N='n' dans ce module xD
 
-#############################
-
-# TO DO: Pouvoir initialiser les variables par l'interface graphique
-# Ps : sens trigo dans ordre croissant
-Dim=8 #Cote du tableau, voila, changement ^^
-di=[0,-1,-1,-1,0,1,1,1]
+Dim=8 
+di=[0,-1,-1,-1,0,1,1,1] 
+>>>>>>> d2a3e5aa88fa831095ac5e5e6f72cb25e883cbf4
 dj=[1,1,0,-1,-1,-1,0,1]
 joueur_actif = 1# Joueur blanc: -1 | Joueur noir: 1
 Matrice=creer_tableau(Dim,Dim,0)
 Humain_peut_jouer = True
-type_joueur = ["Humain",None,"Humain"] #Bricolage, voir comment faire
-# mieux
+type_joueur = ["Negamax_alpha_beta_empowered",None,"Humain"] #Stocke le type des joueurs
 tableau_sauvegarde = [] #Tableau contenant toutes les matrices de jeu
 
-# Les accesseurs/mutateurs (c'pas ça l'encapsulation d'ailleurs ?)
+# Les accesseurs/mutateurs (Getters/Setters)
+# Ils sont là à cause de la modularité des variables globales,
+# de la difficulté de changer les listes (pointeurs)
+# et pour garder une meilleure modularité dans le code 
 
 def set_Humain_peut_jouer(boolean):
     global Humain_peut_jouer
@@ -58,6 +53,13 @@ def set_Matrice(t):
     global Matrice
     copier_tableau(t, Matrice)
 
+def set_Matrice_Dim(t,n):
+    global Dim, Matrice
+    Dim = n
+    Matrice = []
+    for i in range (len(t)):
+        Matrice.append(t[i])
+    
 def get_element_tableau_sauvegarde(indice):
     global tableau_sauvegarde
     return tableau_sauvegarde[indice]
@@ -83,28 +85,21 @@ def supprimer_n_elements_sauvegarde(n):
     for i in range(n):
         tableau_sauvegarde.pop()
         
-# les fontions
 
-def avant_dernier_joueur():
-    if len(get_tableau_sauvegarde()) >= 3:
-        t1 = get_element_tableau_sauvegarde(-2)
-        t2 = get_element_tableau_sauvegarde(-3)
-        if score_absolu(t1,1) > score_absolu(t2,1):
-            return 1
-        return -1
-    return get_joueur_actif()
+# les fonctions
 
-def dernier_joueur():
-    if len(get_tableau_sauvegarde()) >= 2:
-        t1 = get_element_tableau_sauvegarde(-1)
-        t2 = get_element_tableau_sauvegarde(-2)
-        if score_absolu(t1,1) > score_absolu(t2,1):
-            return 1
-        return -1
-    return get_joueur_actif()
-
+def coup_dernier_joueur_humain():
+    joueur_humain = get_joueur_actif()
+    n = 1
+    t = get_tableau_sauvegarde()
+    while n+1 <= len(t):
+        t1 = t[-n]
+        t2 = t[-(n+1)]
+        if score_absolu(t1, joueur_humain) > score_absolu(t2, joueur_humain):
+            return n
+        n+= 1
+        
 def undo(n):
-    print("longueur du tableau_sauvegarde" + str(len(tableau_sauvegarde)))
     if len(tableau_sauvegarde)> n:
         supprimer_n_elements_sauvegarde(n)
         set_Matrice(tableau_sauvegarde[-1])
@@ -123,34 +118,13 @@ def initialiser_Matrice():
     Matrice[Dim//2][Dim//2 -1]=1
     tableau_sauvegarde=[]
     ajouter_tableau_sauvegarde(Matrice)
-    
-def afficher_ligne():
-    for i in range(Dim):
-        sys.stdout.write("---")
-
-def afficher_plateau(t):
-    afficher_ligne()
-    print(" ")
-    for i in range(get_Dim()):
-        for j in range(get_Dim()):
-            if t[i][j] == 0:
-                sys.stdout.write("  ")
-            elif t[i][j] == -1:
-                sys.stdout.write("-1")
-            else:
-                sys.stdout.write(" 1")
-            sys.stdout.write('|')
-        print("")
-        afficher_ligne()
-        print('')
 
 def score_absolu(t, joueur): 
     count = 0
     for i in t:
         for j in i:
-            if j == joueur:
-                count += 1
-    return count
+            count += j
+    return count*joueur
 
 def score_blanc(t):
     return nb_occurences_tableau(t,-1)
@@ -228,6 +202,9 @@ def liste_coups_possibles(t, joueur):
 # dans un tuple
     return l
 
+
+#Fonctions utiles pour les IA types Negamax
+
 def evaluer(t, joueur):
     score = 0
     for i in range(Dim):
@@ -240,4 +217,62 @@ def evaluer(t, joueur):
             else:
                 score += t[i][j]
     return score * joueur
+
+def nbr_retournes(t, i, j, joueur):
+    retournes = 0
+    for dir in range(8):
+        retournes += tester_position(t,i,j,dir,joueur)
+    return retournes
+
+#Pondération des cases pour evaluer_v2
+
+def score_pos(t, i, j):
+    if (i == 0 or i == Dim -1) and (j==0 or j == Dim -1):
+        return 1000
+    elif (i == 0 or i == 1 or i == Dim-1 or i == Dim-2)\
+        and (j == 0 or j == 1 or j == Dim-1 or j  == Dim-2):
+        return -100
+    elif i == 0 or i == Dim-1 or j== 0 or j== Dim-1:
+        return 100
+    else:
+        return 1
         
+def evaluer_v2(t, joueur):
+    score = 0
+    for i in range(Dim):
+        for j in range(Dim):
+            score += score_pos(t,i,j) * t[i][j]
+    return score*joueur
+
+
+if __name__ == "__main__":
+    tableau_scores = creer_tableau(Dim, Dim, 0)
+    for i in range (Dim):
+        for j in range(Dim):
+            tableau_scores[i][j] = score_pos(tableau_scores,i,j)
+    print("tableau de pondération pour Dim = 8")
+    print()
+    afficher_tableau(tableau_scores)
+    print()
+    print("On passe à Dim = 4")
+    t = creer_tableau(4,4,0)
+    for i in range (1,3):
+        for j in range (1,3):
+            if (i+j)%2 == 0:
+                t[i][j] = 1
+            else:
+                t[i][j] = -1
+    afficher_plateau(t)
+    set_Matrice_Dim(t,4)
+    afficher_plateau(Matrice)
+    t2 = creer_tableau(4,4,0)
+    for i in range(Dim):
+        for j in range(Dim):
+            t2[i][j] = score_pos(t2,i,j)
+    print()
+    print("tableau de pondération")
+    afficher_tableau(t2)
+    Matrice[0][0] = 1
+    Matrice[0][1] = -1
+    afficher_plateau(Matrice)
+    print("evaluer_v2 de Matrice pour joueur 1 = " + str(evaluer_v2(Matrice, 1)))

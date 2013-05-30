@@ -7,8 +7,6 @@ from sauvegarde import *
 from tkinter.filedialog import *
 
 
-afficher_plateau(Matrice)
-
 #Les widgets:
 fen = Tk()
 Position= Label(fen,font='ChintzyCPUBRK')
@@ -35,17 +33,13 @@ def actualiser_plus():
 
 def n_coup_avant(): 
     joueur = get_joueur_actif()
-    if get_typejoueur(joueur) == get_typejoueur(-joueur):
+    if get_typejoueur(joueur) == get_typejoueur(-joueur): #Cas de Humain vs Humain
         undo(1)
         if dernier_joueur() != joueur:
             set_joueur_actif(-joueur)
     else:
-        if dernier_joueur() == joueur:
-            undo(1)
-        elif dernier_joueur() != avant_dernier_joueur():
-            undo(2) 
-        else: #si IA joué deux fois avant nous
-            undo(3)
+        n = coup_dernier_joueur_humain()
+        undo(n)
     actualiser_plus()
         
 def actualiser():
@@ -66,8 +60,7 @@ def actualiser():
                                  + str(score_actuel[1]) + " , Joueur : Noir")
     else:
         showinfo('Fin de partie','Le joueur avec les pions '+str(joueur_victorieux( get_Matrice() ))+' remporte la victoire !')
-    
-    
+
 def clique_gauche(event):
     j=(event.x - DB )//TAILLE_CASE
     i=(event.y - DB )//TAILLE_CASE
@@ -125,16 +118,10 @@ def sauvegarde_de_partie(nom_fichier):
     if test == None:
         sauvegarde_de_partie_sous()
     
-#Revoir la fonction: global Matrice pas forcément utile
 def jouer_coup(t,i,j):
     global Matrice
     joueur= get_joueur_actif()
-    #print("Le joueur est" + str(joueur)) 
- #Test ici ?
-    #print("joueur_actif avant jouer" + str(joueur_actif))
     test=jouer(i,j, joueur)
-    #print("joueur_actif : "+ str(get_joueur_actif()))
-    # Ainsi un coup invalide ne change pas le joueur actif 
     if  test == None:
         return
     ajouter_tableau_sauvegarde(Matrice)
