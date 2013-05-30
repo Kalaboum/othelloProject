@@ -4,7 +4,7 @@ import sys
 
 #Paramètres de l'IA Negamax
 depth = 0
-maxdepth = 5
+maxdepth = 4
 
 def set_maxdepth(n):
     global maxdepth
@@ -28,10 +28,12 @@ def Maximiser(t, joueur):
                 meilleur_coup = (i,j)
     jouer(meilleur_coup[0], meilleur_coup[1], joueur)
 
-def Negamax(t, joueur, depth, maxdepth): #Je pense pas qu'elle soit juste, mais
-    meilleur_coup = None # ça joue
-    if not (peut_jouer(t,joueur)) and not (peut_joueur(t,joueur)):
-        return score_absolu(t,joueur)*20000
+def Negamax(t, joueur, depth, maxdepth):
+    if not (peut_jouer(t,joueur)) and not (peut_jouer(t,-joueur)):
+        return (score_absolu(t,joueur)*20000, 0)
+    meilleur_coup = None 
+    if not (peut_jouer(t,joueur)) and not (peut_jouer(t,-joueur)):
+         return (score_absolu(t,joueur)*20000, 0)
     if depth == maxdepth:
         return (evaluer(t, joueur), 0)
     else:
@@ -54,6 +56,8 @@ def Negamax(t, joueur, depth, maxdepth): #Je pense pas qu'elle soit juste, mais
     return (meilleure_valeur, meilleur_coup)
 
 def Negamax_alpha_beta(t, joueur, depth, maxdepth, alpha, beta):
+    if not (peut_jouer(t,joueur)) and not (peut_jouer(t,-joueur)):
+        return (score_absolu(t,joueur)*20000, 0)
     meilleur_coup = None # ça joue
     if depth == maxdepth:
         return (evaluer(t, joueur), 0)
@@ -79,13 +83,15 @@ def Negamax_alpha_beta(t, joueur, depth, maxdepth, alpha, beta):
     return (meilleure_valeur, meilleur_coup)
 
 def Negamax_alpha_beta_empowered(t, joueur, depth, maxdepth, alpha, beta):
+    if not (peut_jouer(t,joueur)) and not (peut_jouer(t,-joueur)):
+        return (score_absolu(t,joueur)*20000, 0)
     meilleur_coup = None # ça joue
     if depth == maxdepth:
         return (evaluer_v2(t, joueur), 0)
     else:
         meilleure_valeur = alpha
         l = liste_coups_possibles(t,joueur)
-        if depth <=2:
+        if depth <=1:
             trier_liste_pour_alpha_beta(l,t,joueur)
         for i in range(len(l)):
             jouer(l[i][0], l[i][1], joueur)
@@ -138,3 +144,21 @@ def echange(t, i, j):
     c = t[i]
     t[i] = t[j]
     t[j] = c
+
+if __name__ == "__main__":
+    # t = creer_tableau(4,4,0)
+    # t[1][1] = 1
+    # t[2][2] = 1
+    # t[1][2] = -1
+    # t[2][1] = -1
+    # set_Matrice_Dim(t, 4)
+    # afficher_tableau(get_Matrice())
+    s = [2,5,7,8,1,3,4,6]
+    t = ["tarte","gâteau","garfield","plop","pidop","oui","non","s"]
+    print("t = " + str(t))
+    print("tableau de correspondances")
+    print("s = " + str(s))    
+    print("on trie")
+    triShaker_avec_alpha_beta(s,t)
+    print("s = " + str(s))
+    print("t = " + str(t))

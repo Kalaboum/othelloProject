@@ -32,17 +32,13 @@ def actualiser_plus():
 
 def n_coup_avant(): 
     joueur = get_joueur_actif()
-    if get_typejoueur(joueur) == get_typejoueur(-joueur):
+    if get_typejoueur(joueur) == get_typejoueur(-joueur): #Cas de Humain vs Humain
         undo(1)
         if dernier_joueur() != joueur:
             set_joueur_actif(-joueur)
     else:
-        if dernier_joueur() == joueur:
-            undo(1)
-        elif dernier_joueur() != avant_dernier_joueur():
-            undo(2) 
-        else: #si IA joué deux fois avant nous
-            undo(3)
+        n = coup_dernier_joueur_humain()
+        undo(n)
     actualiser_plus()
         
 def actualiser():
