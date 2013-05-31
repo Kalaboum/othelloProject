@@ -5,6 +5,7 @@ import time
 total_temps = []
 nbr_coups = 0
 
+#Fonction utilisée pour calculer le temps d'execution du Negamax
 def moyenne(temps, coups):
     tot = 0.0
     for i in range (len(temps)):
@@ -52,18 +53,33 @@ def attendre_tour_humain(t, joueur):
         # moye = moyenne(total_temps, nbr_coups)
         # print(" la moyenne : " + str(moye))
         
-
+#Les options du menu de modification du niveau de l'IA utilisent cette fonction
 def niveau_IA(n):
+    #On recupère les données de jeu utile pour identifier le niveau actuel de l'IA
     ia_en_cour=get_typejoueur(-1)
     maxdepth_courant=get_maxdepth()
+    #On identifie le niveau de l'IA actuel 
     indice_dans_IA_disponible=indice_occurence(IA_disponible,(ia_en_cour,maxdepth_courant))
+    #On change si c'est possible dans le sens choisi (+ ou -)
     if 0 <= n+indice_dans_IA_disponible <= len(IA_disponible)-1:
         set_typejoueur(-1,IA_disponible[n+indice_dans_IA_disponible][0])
         set_maxdepth(IA_disponible[n+indice_dans_IA_disponible][1])
-
+        
 def changement_mode_de_jeu():
     if get_typejoueur(-1)=="Humain":
         set_typejoueur(-1,"IAMaximiser")
         set_maxdepth(None)
     else:
         set_typejoueur(-1,"Humain")
+
+#Calcul le nombre de matrice qu'il faut enlever du tableau de sauvegarde
+#On reviens en effet d'un nombre differents de matrice en arrière suivant le mode de jeu
+def n_coup_avant(): 
+    joueur = get_joueur_actif()
+    if get_typejoueur(joueur) == get_typejoueur(-joueur): #Cas de Humain vs Humain
+        undo(1)
+        if dernier_joueur() != joueur:
+            set_joueur_actif(-joueur)
+    else:
+        n = coup_dernier_joueur_humain()
+        undo(n)

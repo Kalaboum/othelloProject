@@ -23,8 +23,8 @@ def Maximiser(t, joueur):
     print(joueur)
     plus_grand_nombre_retournes = 0
     meilleur_coup = None
-    for i in range(Dim):
-        for j in range(Dim):
+    for i in range(get_Dim()):
+        for j in range(get_Dim()):
             retournes = nbr_retournes(t,i,j,joueur)
             if retournes > plus_grand_nombre_retournes:
                 plus_grand_nombre_retournes = retournes

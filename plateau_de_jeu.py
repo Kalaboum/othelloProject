@@ -2,15 +2,17 @@ from tableaux import *
 
 #Déclaration des variables globales et leurs valeurs par défaut
 
-
-Dim=8 
+Dim=8
 di=[0,-1,-1,-1,0,1,1,1] 
 dj=[1,1,0,-1,-1,-1,0,1]
 joueur_actif = 1# Joueur blanc: -1 | Joueur noir: 1
 Matrice=creer_tableau(Dim,Dim,0)
 Humain_peut_jouer = True
-type_joueur = ["Negamax_alpha_beta_empowered",None,"Humain"] #Stocke le type des joueurs
-tableau_sauvegarde = [] #Tableau contenant toutes les matrices de jeu
+type_joueur = ["Negamax_alpha_beta_empowered",None,"Humain"] #Stocke le type des joueurs dans
+#l'ordre croissant de difficulté pour le joueur
+
+tableau_sauvegarde = [] #Tableau contenant toutes les matrices de jeu, on ajoute la matrice
+#actuel a chaque coup
 
 # Les accesseurs/mutateurs (Getters/Setters)
 # Ils sont là à cause de la modularité des variables globales,
@@ -54,7 +56,7 @@ def set_Matrice(t):
 
 def set_Matrice_Dim(t,n):
     global Dim, Matrice
-    Dim = n
+    set_Dim(n)
     Matrice = []
     for i in range (len(t)):
         Matrice.append(t[i])
@@ -82,7 +84,7 @@ def ajouter_tableau_sauvegarde(t):
 def supprimer_n_elements_sauvegarde(n):
     global tableau_sauvegarde
     for i in range(n):
-        tableau_sauvegarde.pop()
+        tableau_sauvegarde.pop() #Supprime le dernier élément du tableau
         
 
 # les fonctions
@@ -97,7 +99,10 @@ def coup_dernier_joueur_humain():
         if score_absolu(t1, joueur_humain) > score_absolu(t2, joueur_humain):
             return n
         n+= 1
-        
+
+#On remet la matrice tel qu'elle était il y a n coup grace a notre tableau de
+#sauvegarde, en supprimant les n derniers element du tableau de sauvegarde
+#et en changeant la matrice avec le dernier element du tableau de sauvegarde
 def undo(n):
     if len(tableau_sauvegarde)> n:
         supprimer_n_elements_sauvegarde(n)
@@ -108,6 +113,7 @@ def joueur_victorieux(t):
         return "blancs"
     return "noirs"
 
+#Initialisation suivant les règles de l'Othello
 def initialiser_Matrice():
     global Matrice
     set_joueur_actif(1)  
@@ -134,6 +140,7 @@ def score_noir(t):
 def score(t):
     return (score_blanc(t),score_noir(t))
 
+#Vu en seance de TD
 def tester_position(t,i,j,dir,joueur):
     if t[i][j] == 0:
         i+=di[dir]
@@ -143,7 +150,7 @@ def tester_position(t,i,j,dir,joueur):
             c+=1
             i+=di[dir]
             j+=dj[dir]
-            if  i<0 or j<0 or j>=Dim or i>=Dim or t[i][j] == 0:
+            if  i<0 or j<0 or j>=Dim or i>= Dim or t[i][j] == 0:
                 return 0
         return c
     return 0
@@ -169,7 +176,7 @@ def retourner_pions(t,i,j,dir,n,joueur):
         j+=dj[dir]
         t[i][j]=joueur
         n-=1
-        
+
 def jouer(i,j,joueur):
     t= get_Matrice()
     if position_valide(t,i,j,joueur):
@@ -226,12 +233,12 @@ def nbr_retournes(t, i, j, joueur):
 #Pondération des cases pour evaluer_v2
 
 def score_pos(t, i, j):
-    if (i == 0 or i == Dim -1) and (j==0 or j == Dim -1):
+    if (i == 0 or i == Dim -1) and (j==0 or j ==  Dim-1):
         return 1000
     elif (i == 0 or i == 1 or i == Dim-1 or i == Dim-2)\
         and (j == 0 or j == 1 or j == Dim-1 or j  == Dim-2):
         return -100
-    elif i == 0 or i == Dim-1 or j== 0 or j== Dim-1:
+    elif i == 0 or i == -1 or j== 0 or j== -1:
         return 100
     else:
         return 1
